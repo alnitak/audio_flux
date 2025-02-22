@@ -1,0 +1,29 @@
+name: audio_flux
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: ^3.6.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_soloud:
+    path: ../flutter_soloud
+  flutter_recorder:
+    path: ../flutter_recorder
+  shader_buffers: ^1.1.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+  very_good_analysis: ^6.0.0
+
+flutter:
