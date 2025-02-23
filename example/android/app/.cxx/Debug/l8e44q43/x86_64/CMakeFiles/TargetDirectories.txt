@@ -1,0 +1,2 @@
+/home/deimos/FLUTTER/libs/audio_flux/example/android/app/.cxx/Debug/l8e44q43/x86_64/CMakeFiles/edit_cache.dir
+/home/deimos/FLUTTER/libs/audio_flux/example/android/app/.cxx/Debug/l8e44q43/x86_64/CMakeFiles/rebuild_cache.dir

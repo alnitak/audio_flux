@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:audio_flux/src/waveform.dart';
+import 'package:audio_flux/src/waveform/waveform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';

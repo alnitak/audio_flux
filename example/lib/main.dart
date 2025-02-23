@@ -116,7 +116,7 @@ class _MainAppState extends State<MainApp> {
                         return SizedBox.shrink();
                       }
                       return SizedBox(
-                        width: 500,
+                        width: 300,
                         height: 100,
                         child: AudioFlux(
                           fluxType: flux,
@@ -127,17 +127,29 @@ class _MainAppState extends State<MainApp> {
                             chunkSize: 256,
                             audioScale: 2,
                             backgroundColor: Colors.black,
+                            backgroundGradient: LinearGradient(
+                              colors: [
+                                Colors.indigo,
+                                Colors.pink,
+                                Colors.black,
+                              ],
+                              stops: [0.0, 0.5, 0.55],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
                             barColor: Colors.redAccent,
-                            // barGradient: LinearGradient(
-                            //   colors: [
-                            //     Color.fromARGB(255, 200, 0, 0),
-                            //     Colors.yellow,
-                            //     Color.fromARGB(255, 0, 200, 0),
-                            //   ],
-                            //   stops: [0.2, 0.5, 0.8],
-                            //   begin: Alignment.topCenter,
-                            //   end: Alignment.bottomCenter,
-                            // ),
+                            barGradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 200, 0, 0),
+                                Colors.yellow,
+                                Color.fromARGB(255, 0, 200, 0),
+                                Colors.yellow,
+                                Color.fromARGB(255, 200, 0, 0),
+                              ],
+                              stops: [0.0, 0.35, 0.5, 0.65, 1.0],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
                           ),
                         ),
                       );

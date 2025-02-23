@@ -3,18 +3,20 @@ import 'dart:typed_data' show Float32List;
 import 'package:flutter/material.dart';
 
 import 'package:audio_flux/src/audio_flux.dart';
-import 'package:audio_flux/src/wave_data_manager.dart';
+import 'package:audio_flux/src/waveform/wave_data_manager.dart';
 
 class WaveformParams {
   const WaveformParams({
     this.backgroundColor = Colors.black,
+    this.backgroundGradient,
     this.barColor = Colors.yellow,
     this.barGradient,
     this.barSize = 1,
     this.barSpacing = 0,
     this.chunkSize = 1,
     this.audioScale = 1,
-  });
+  }) : assert(chunkSize > 0 && chunkSize <= 256,
+            'chunkSize must be between 1 and 256');
 
   /// The background color of the waveform.
   final Color backgroundColor;
@@ -22,15 +24,19 @@ class WaveformParams {
   /// The color of the waveform bars.
   final Color barColor;
 
+  /// The gradient of the waveform background. If provided, this will
+  /// override [backgroundColor].
+  final Gradient? backgroundGradient;
+
   /// The gradient of the waveform bars. If provided, this will
   /// override [barColor].
-  final LinearGradient? barGradient;
+  final Gradient? barGradient;
 
   /// The size of a bar in pixels.
   final int barSize;
 
   /// The size of spacing between bars in pixels.
-  final double barSpacing;
+  final int barSpacing;
 
   /// The number of new data to average and add to the waveform.
   /// The higher the number, the smoother the waveform.
@@ -82,7 +88,7 @@ class WavePainter extends CustomPainter {
     final buffer = waveManager.data;
 
     final chunkSize = params.chunkSize;
-    var processedLength = buffer.length ~/ chunkSize;
+    var processedLength = currentWaveData.length ~/ chunkSize;
     // if (processedLength == 0) processedLength = 2;
 
     // Shift existing data to the left
@@ -100,6 +106,7 @@ class WavePainter extends CustomPainter {
           j < chunkSize && (startIdx + j) < currentWaveData.length;
           j++) {
         sum += currentWaveData[startIdx + j];
+        // print('sum $i $j : ${sum.toStringAsFixed(2)}');
       }
 
       // Store at the end of the array
@@ -123,13 +130,21 @@ class WavePainter extends CustomPainter {
       processWaveData(currentWaveData);
     }
 
-    final paint = Paint();
-
     // Draw the background
+    final backgroundPaint = Paint();
+    if (params.backgroundGradient != null) {
+      backgroundPaint.shader = params.backgroundGradient!.createShader(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+      );
+    } else {
+      backgroundPaint.color = params.backgroundColor;
+    }
     canvas.drawRect(
       Rect.fromLTWH(0, 0, size.width, size.height),
-      Paint()..color = params.backgroundColor,
+      backgroundPaint,
     );
+
+    final paint = Paint();
 
     // Set up the bar paint
     if (params.barGradient != null) {
@@ -141,10 +156,12 @@ class WavePainter extends CustomPainter {
     }
 
     // Draw the bars
+    final barWidth =
+        params.barSize.toDouble() + params.barSpacing;
     for (var i = 0; i < effectiveBarCount; i++) {
       final value = waveManager.data[i];
       final barHeight = size.height * value * params.audioScale;
-      final barX = i * (params.barSize + params.barSpacing);
+      final barX = i * barWidth;
 
       canvas.drawRect(
         Rect.fromLTWH(
@@ -160,7 +177,6 @@ class WavePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(WavePainter oldDelegate) {
-    return oldDelegate.params.hashCode != params.hashCode;
-    // return true;
+    return true;
   }
 }
