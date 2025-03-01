@@ -17,6 +17,7 @@ dependencies:
   flutter_recorder:
     path: ../flutter_recorder
   shader_buffers: ^1.1.0
+  meta: ^1.16.0
 
 
 dev_dependencies:

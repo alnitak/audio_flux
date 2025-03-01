@@ -1,9 +1,8 @@
 import 'dart:typed_data' show Float32List;
 
 import 'package:flutter/material.dart';
-
 import 'package:audio_flux/src/audio_flux.dart';
-import 'package:audio_flux/src/waveform/wave_data_manager.dart';
+import 'package:audio_flux/src/utils/painter_data_manager.dart';
 
 class WaveformParams {
   const WaveformParams({
@@ -11,12 +10,15 @@ class WaveformParams {
     this.backgroundGradient,
     this.barColor = Colors.yellow,
     this.barGradient,
-    this.barSize = 1,
+    this.barsWidth = 1,
     this.barSpacing = 0,
     this.chunkSize = 1,
     this.audioScale = 1,
   }) : assert(chunkSize > 0 && chunkSize <= 256,
             'chunkSize must be between 1 and 256');
+
+  PainterDataManager get dataManager => _internalDataManager ??= PainterDataManager();
+  static PainterDataManager? _internalDataManager;
 
   /// The background color of the waveform.
   final Color backgroundColor;
@@ -33,14 +35,14 @@ class WaveformParams {
   final Gradient? barGradient;
 
   /// The size of a bar in pixels.
-  final int barSize;
+  final int barsWidth;
 
   /// The size of spacing between bars in pixels.
   final int barSpacing;
 
   /// The number of new data to average and add to the waveform.
-  /// The higher the number, the smoother the waveform.
-  /// This should be >= 1.
+  /// The higher the number, the slower the waveform is moving.
+  /// This should be >= 1 and <= 256.
   final int chunkSize;
 
   /// The scale of the audio data. This is used to scale the bars height.
@@ -52,7 +54,7 @@ class Waveform extends StatelessWidget {
   const Waveform({
     super.key,
     required this.dataCallback,
-    this.params = const WaveformParams(),
+    required this.params,
   });
 
   final DataCallback dataCallback;
@@ -82,14 +84,10 @@ class WavePainter extends CustomPainter {
   final WaveformParams params;
 
   void processWaveData(Float32List currentWaveData) {
-    final waveManager = WaveDataManager.instance;
-    // if (!waveManager.hasDataChanged(currentWaveData)) return;
-
-    final buffer = waveManager.data;
+    final buffer = params.dataManager.data;
 
     final chunkSize = params.chunkSize;
     var processedLength = currentWaveData.length ~/ chunkSize;
-    // if (processedLength == 0) processedLength = 2;
 
     // Shift existing data to the left
     for (var i = 0; i < buffer.length - processedLength; i++) {
@@ -102,28 +100,27 @@ class WavePainter extends CustomPainter {
       final startIdx = i * chunkSize;
 
       // Calculate average for this chunk
-      for (var j = 0;
+      var j = 0;
+      for (j = 0;
           j < chunkSize && (startIdx + j) < currentWaveData.length;
           j++) {
         sum += currentWaveData[startIdx + j];
-        // print('sum $i $j : ${sum.toStringAsFixed(2)}');
       }
 
       // Store at the end of the array
-      buffer[buffer.length - processedLength + i] = sum / chunkSize;
+      buffer[buffer.length - processedLength + i] = sum / j;
     }
   }
 
   int _calculateEffectiveBarCount(double width) {
-    return (width / (params.barSize + params.barSpacing)).floor();
+    return (width / (params.barsWidth + params.barSpacing)).floor();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     final effectiveBarCount = _calculateEffectiveBarCount(size.width);
 
-    final waveManager = WaveDataManager.instance;
-    waveManager.ensureCapacity(effectiveBarCount);
+    params.dataManager.ensureCapacity(effectiveBarCount);
 
     var currentWaveData = getDataCallback();
     if (currentWaveData.isNotEmpty) {
@@ -156,18 +153,17 @@ class WavePainter extends CustomPainter {
     }
 
     // Draw the bars
-    final barWidth =
-        params.barSize.toDouble() + params.barSpacing;
+    final barWidth = params.barsWidth.toDouble() + params.barSpacing;
     for (var i = 0; i < effectiveBarCount; i++) {
-      final value = waveManager.data[i];
-      final barHeight = size.height * value * params.audioScale;
+      final value = params.dataManager.data[i];
+      final barHeight = size.height * value * 2 * params.audioScale;
       final barX = i * barWidth;
 
       canvas.drawRect(
         Rect.fromLTWH(
           barX,
           (size.height - barHeight) / 2,
-          params.barSize.toDouble(),
+          params.barsWidth.toDouble(),
           barHeight,
         ),
         paint,

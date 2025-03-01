@@ -15,14 +15,14 @@ enum FluxType {
   waveform,
 }
 
-typedef DataCallback = Float32List Function();
+typedef DataCallback = Float32List Function({bool alwaysReturnData});
 
 class AudioFlux extends StatefulWidget {
   const AudioFlux({
     super.key,
     required this.dataSource,
     required this.fluxType,
-    this.waveformParams = const WaveformParams(),
+    required this.waveformParams,
   });
 
   final DataSources dataSource;
@@ -75,14 +75,17 @@ class _AudioFluxState extends State<AudioFlux>
   void setupWidgetAndCallback() {
     switch (widget.fluxType) {
       case FluxType.waveform:
+
         /// Setup the painter and the callback needed by [FluxType.waveform].
         switch (widget.dataSource) {
           case DataSources.soloud:
             audioData = AudioData(GetSamplesKind.wave);
-            dataCallback = audioData!.getAudioData;
+            dataCallback = ({bool alwaysReturnData = false}) =>
+                audioData!.getAudioData(alwaysReturnData: alwaysReturnData);
             break;
           case DataSources.recorder:
-            dataCallback = Recorder.instance.getWave;
+            dataCallback = ({bool alwaysReturnData = false}) =>
+                Recorder.instance.getWave(alwaysReturnData: alwaysReturnData);
             break;
         }
         painterWidget = Waveform(

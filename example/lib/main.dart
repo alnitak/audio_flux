@@ -116,37 +116,40 @@ class _MainAppState extends State<MainApp> {
                         return SizedBox.shrink();
                       }
                       return SizedBox(
-                        width: 300,
-                        height: 100,
+                        width: 500,
+                        height: 300,
                         child: AudioFlux(
                           fluxType: flux,
                           dataSource: data,
-                          waveformParams: const WaveformParams(
-                            barSize: 1,
-                            barSpacing: 0,
-                            chunkSize: 256,
-                            audioScale: 2,
+                          waveformParams: WaveformParams(
+                            barsWidth: 1,
+                            barSpacing: 1,
+                            chunkSize: 128,
+                            audioScale: data == DataSources.recorder ? 4 : 1,
                             backgroundColor: Colors.black,
-                            backgroundGradient: LinearGradient(
+                            backgroundGradient: const LinearGradient(
                               colors: [
-                                Colors.indigo,
-                                Colors.pink,
+                                Color.fromARGB(255, 7, 28, 148),
+                                Color.fromARGB(255, 183, 23, 76),
                                 Colors.black,
+                                Color.fromARGB(255, 98, 65, 57),
                               ],
-                              stops: [0.0, 0.5, 0.55],
+                              stops: [0.0, 0.5, 0.55, 1],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
                             barColor: Colors.redAccent,
-                            barGradient: LinearGradient(
+                            barGradient: const LinearGradient(
                               colors: [
                                 Color.fromARGB(255, 200, 0, 0),
-                                Colors.yellow,
+                                Color.fromARGB(255, 253, 233, 58),
                                 Color.fromARGB(255, 0, 200, 0),
-                                Colors.yellow,
+                                Colors.black,
+                                Color.fromARGB(255, 0, 200, 0),
+                                Color.fromARGB(255, 253, 233, 58),
                                 Color.fromARGB(255, 200, 0, 0),
                               ],
-                              stops: [0.0, 0.35, 0.5, 0.65, 1.0],
+                              stops: [0.0, 0.4, 0.495, 0.5, 0.505, 0.6, 1.0],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
