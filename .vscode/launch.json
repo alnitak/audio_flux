@@ -21,6 +21,15 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Debug native Linux",
+            "preLaunchTask": "compile linux debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "program": "${workspaceFolder}/example/build/linux/x64/debug/bundle/example",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

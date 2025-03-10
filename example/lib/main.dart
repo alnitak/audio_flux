@@ -1,6 +1,8 @@
 import 'dart:developer' as dev;
 
 import 'package:audio_flux/audio_flux.dart';
+import 'package:example/controls/controls.dart';
+import 'package:example/model/model.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
@@ -35,8 +37,65 @@ class _MainAppState extends State<MainApp> {
   final recorder = Recorder.instance;
   final soloud = SoLoud.instance;
 
-  var dataSource = ValueNotifier<DataSources?>(null);
-  var fluxType = ValueNotifier<FluxType>(FluxType.waveform);
+  final AudioVisualizerModel model = AudioVisualizerModel();
+
+  late Gradient backgroundGradient;
+  late Gradient waveBarGradient;
+  late Gradient fftBarGradient;
+
+  @override
+  void initState() {
+    super.initState();
+    setupGradients();
+
+    initRecorder();
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    setupGradients();
+  }
+
+  void setupGradients() {
+    model.updatePainterParams(
+        backgroundGradient: const LinearGradient(
+          colors: [
+            Color.fromARGB(255, 7, 28, 148),
+            Color.fromARGB(255, 183, 23, 76),
+            Colors.black,
+            Color.fromARGB(255, 98, 65, 57),
+          ],
+          stops: [0.0, 0.5, 0.55, 1],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        barGradient: model.fluxType == FluxType.waveform
+            ? const LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 200, 0, 0),
+                  Color.fromARGB(255, 253, 233, 58),
+                  Color.fromARGB(255, 0, 200, 0),
+                  Colors.black,
+                  Color.fromARGB(255, 0, 200, 0),
+                  Color.fromARGB(255, 253, 233, 58),
+                  Color.fromARGB(255, 200, 0, 0),
+                ],
+                stops: [0.0, 0.4, 0.495, 0.5, 0.505, 0.6, 1.0],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              )
+            : const LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 200, 0, 0),
+                  Color.fromARGB(255, 253, 233, 58),
+                  Color.fromARGB(255, 0, 200, 0),
+                ],
+                stops: [0, 0.6, 1.0],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ));
+  }
 
   @override
   void dispose() {
@@ -51,14 +110,32 @@ class _MainAppState extends State<MainApp> {
       await soloud.init(bufferSize: 2048);
       soloud.setVisualizationEnabled(true);
       await soloud.play(
-        await soloud.loadAsset('assets/ElectroNebulae.mp3'),
+        await soloud
+            .loadFile('/home/deimos/5/free/shadertoy/8 bit mentality.mp3'),
         looping: true,
       );
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
 
-    setState(() {});
+    model.updateDataSource(source: DataSources.soloud);
+  }
+
+  Future<void> initSoLoud2() async {
+    try {
+      recorder.deinit();
+      await soloud.init(bufferSize: 2048);
+      soloud.setVisualizationEnabled(true);
+      await soloud.play(
+        await soloud.loadFile(
+            '/home/deimos/5/12Bands/audiocheck.net_sweep_20Hz_20000Hz_-3dBFS_4s_linear.wav'),
+        looping: true,
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+
+    model.updateDataSource(source: DataSources.soloud);
   }
 
   Future<void> initRecorder() async {
@@ -66,20 +143,28 @@ class _MainAppState extends State<MainApp> {
       soloud.deinit();
 
       /// [PCMFormat.f32le] is required for getting audio data to work.
-      await recorder.init(format: PCMFormat.f32le);
+      await recorder.init(
+        sampleRate: 44100,
+        format: PCMFormat.f32le,
+        channels: RecorderChannels.mono,
+      );
       recorder.start();
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
 
-    setState(() {});
+    model.updateDataSource(source: DataSources.recorder);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.dark(),
+      themeMode: ThemeMode.dark,
       home: Scaffold(
-        body: Center(
+        bottomSheet: Controls(model: model),
+        body: Align(
+          alignment: Alignment.topCenter,
           child: Column(
             spacing: 16,
             mainAxisSize: MainAxisSize.min,
@@ -92,71 +177,32 @@ class _MainAppState extends State<MainApp> {
                     onPressed: () async {
                       recorder.deinit();
                       await initSoLoud();
-                      dataSource.value = DataSources.soloud;
                     },
-                    child: Text('start SoLoud'),
+                    child: Text('SoLoud song'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      recorder.deinit();
+                      await initSoLoud2();
+                    },
+                    child: Text('SoLoud audio seep'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
                       soloud.deinit();
                       await initRecorder();
-                      dataSource.value = DataSources.recorder;
                     },
                     child: Text('start Recorder'),
                   ),
                 ],
               ),
-              ValueListenableBuilder<FluxType>(
-                valueListenable: fluxType,
-                builder: (context, flux, snapshot) {
-                  return ValueListenableBuilder<DataSources?>(
-                    valueListenable: dataSource,
-                    builder: (context, data, snapshot) {
-                      if (data == null) {
-                        return SizedBox.shrink();
-                      }
-                      return SizedBox(
-                        width: 500,
-                        height: 300,
-                        child: AudioFlux(
-                          fluxType: flux,
-                          dataSource: data,
-                          waveformParams: WaveformParams(
-                            barsWidth: 1,
-                            barSpacing: 1,
-                            chunkSize: 128,
-                            audioScale: data == DataSources.recorder ? 4 : 1,
-                            backgroundColor: Colors.black,
-                            backgroundGradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 7, 28, 148),
-                                Color.fromARGB(255, 183, 23, 76),
-                                Colors.black,
-                                Color.fromARGB(255, 98, 65, 57),
-                              ],
-                              stops: [0.0, 0.5, 0.55, 1],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                            barColor: Colors.redAccent,
-                            barGradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 200, 0, 0),
-                                Color.fromARGB(255, 253, 233, 58),
-                                Color.fromARGB(255, 0, 200, 0),
-                                Colors.black,
-                                Color.fromARGB(255, 0, 200, 0),
-                                Color.fromARGB(255, 253, 233, 58),
-                                Color.fromARGB(255, 200, 0, 0),
-                              ],
-                              stops: [0.0, 0.4, 0.495, 0.5, 0.505, 0.6, 1.0],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+              ListenableBuilder(
+                listenable: model,
+                builder: (BuildContext context, Widget? child) {
+                  return AudioFlux(
+                    fluxType: model.fluxType,
+                    dataSource: model.dataSource,
+                    painterParams: model.painterParams,
                   );
                 },
               ),

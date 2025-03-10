@@ -16,9 +16,9 @@ dependencies:
     path: ../flutter_soloud
   flutter_recorder:
     path: ../flutter_recorder
+  fps_counter: ^1.0.0+2
   shader_buffers: ^1.1.0
   meta: ^1.16.0
-
 
 dev_dependencies:
   flutter_test:
