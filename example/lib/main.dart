@@ -48,7 +48,7 @@ class _MainAppState extends State<MainApp> {
     super.initState();
     setupGradients();
 
-    initRecorder();
+    initSoLoud();
   }
 
   @override
@@ -110,8 +110,7 @@ class _MainAppState extends State<MainApp> {
       await soloud.init(bufferSize: 2048);
       soloud.setVisualizationEnabled(true);
       await soloud.play(
-        await soloud
-            .loadFile('/home/deimos/5/free/shadertoy/8 bit mentality.mp3'),
+        await soloud.loadAsset('assets/audio/ElectroNebulae.mp3'),
         looping: true,
       );
     } on Exception catch (e) {
@@ -127,8 +126,7 @@ class _MainAppState extends State<MainApp> {
       await soloud.init(bufferSize: 2048);
       soloud.setVisualizationEnabled(true);
       await soloud.play(
-        await soloud.loadFile(
-            '/home/deimos/5/12Bands/audiocheck.net_sweep_20Hz_20000Hz_-3dBFS_4s_linear.wav'),
+        await soloud.loadAsset('assets/audio/audiocheck.wav'),
         looping: true,
       );
     } on Exception catch (e) {
@@ -175,21 +173,18 @@ class _MainAppState extends State<MainApp> {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
-                      recorder.deinit();
                       await initSoLoud();
                     },
                     child: Text('SoLoud song'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      recorder.deinit();
                       await initSoLoud2();
                     },
-                    child: Text('SoLoud audio seep'),
+                    child: Text('SoLoud audio sweep'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      soloud.deinit();
                       await initRecorder();
                     },
                     child: Text('start Recorder'),

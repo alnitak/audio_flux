@@ -2,6 +2,7 @@ import 'package:audio_flux/audio_flux.dart';
 import 'package:example/controls/common_controls.dart';
 import 'package:example/controls/fft_controls.dart';
 import 'package:example/controls/flux_type_controls.dart';
+import 'package:example/controls/shader_controls.dart';
 import 'package:example/controls/wave_controls.dart';
 import 'package:example/model/model.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,11 @@ class _ControlsState extends State<Controls> {
           ColoredBox(
             color: Color.fromARGB(255, 20, 20, 20),
             child: WaveControls(model: widget.model),
+          ),
+          if (widget.model.fluxType == FluxType.shader)
+          ColoredBox(
+            color: Color.fromARGB(255, 20, 20, 20),
+            child: ShaderControls(model: widget.model),
           ),
       ],
     );

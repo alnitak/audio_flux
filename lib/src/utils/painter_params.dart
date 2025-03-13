@@ -1,35 +1,37 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import 'package:audio_flux/audio_flux.dart';
 import 'package:audio_flux/src/utils/painter_data_manager.dart';
+import 'package:audio_flux/src/utils/shader_params.dart';
 
 class FftParams {
   factory FftParams({
-    int minIndex = 0,
-    int maxIndex = 255,
+    int minBinIndex = 0,
+    int maxBinIndex = 255,
     int shrinkTo = 256,
-    double barSpacingScale = 0.5,
+    double barSpacingScale = 0,
     double fftSmoothing = 0.93,
   }) {
     assert(
-      minIndex >= 0 && maxIndex <= 255 && minIndex <= maxIndex,
-      'minIndex and maxIndex must be between 0 and 255 and '
-      'minIndex must be <= maxIndex',
+      minBinIndex >= 0 && maxBinIndex <= 255 && minBinIndex <= maxBinIndex,
+      'minBinIndex and maxIndex must be between 0 and 255 and '
+      'minBinIndex must be <= maxIndex',
     );
 
-    var effectiveShrinkTo = shrinkTo == -1 ? maxIndex - minIndex + 1 : shrinkTo;
+    var effectiveShrinkTo = shrinkTo == -1 ? maxBinIndex - minBinIndex + 1 : shrinkTo;
 
-    if (effectiveShrinkTo > maxIndex - minIndex + 1) {
-      effectiveShrinkTo = maxIndex - minIndex + 1;
+    if (effectiveShrinkTo > maxBinIndex - minBinIndex + 1) {
+      effectiveShrinkTo = maxBinIndex - minBinIndex + 1;
       debugPrint(
-        'shrinkTo is greater than maxIndex-minIndex+1. '
-        'Automatically set to maxIndex-minIndex+1: $shrinkTo',
+        'shrinkTo is greater than maxIndex-minBinIndex+1. '
+        'Automatically set to maxIndex-minBinIndex+1: $shrinkTo',
       );
     }
 
     return FftParams._internal(
-      minIndex: minIndex,
-      maxIndex: maxIndex,
+      minBinIndex: minBinIndex,
+      maxBinIndex: maxBinIndex,
       shrinkTo: effectiveShrinkTo,
       barSpacingScale: barSpacingScale,
       fftSmoothing: fftSmoothing,
@@ -38,23 +40,23 @@ class FftParams {
 
   /// Creates a [FftParams] with default values to be used as const.
   const FftParams.safe({
-    this.minIndex = 0,
-    this.maxIndex = 255,
+    this.minBinIndex = 0,
+    this.maxBinIndex = 255,
     this.shrinkTo = 256,
-    this.barSpacingScale = 0.5,
+    this.barSpacingScale = 0,
     this.fftSmoothing = 0.93,
   });
 
   const FftParams._internal({
-    required this.minIndex,
-    required this.maxIndex,
+    required this.minBinIndex,
+    required this.maxBinIndex,
     required this.shrinkTo,
     required this.barSpacingScale,
     required this.fftSmoothing,
   });
 
-  final int minIndex;
-  final int maxIndex;
+  final int minBinIndex;
+  final int maxBinIndex;
   final int shrinkTo;
   final double barSpacingScale;
   
@@ -63,15 +65,15 @@ class FftParams {
   final double fftSmoothing;
 
   FftParams copyWith({
-    int? minIndex,
-    int? maxIndex,
+    int? minBinIndex,
+    int? maxBinIndex,
     int? shrinkTo,
     double? barSpacingScale,
     double? fftSmoothing,
   }) {
     return FftParams(
-      minIndex: minIndex ?? this.minIndex,
-      maxIndex: maxIndex ?? this.maxIndex,
+      minBinIndex: minBinIndex ?? this.minBinIndex,
+      maxBinIndex: maxBinIndex ?? this.maxBinIndex,
       shrinkTo: shrinkTo ?? this.shrinkTo,
       barSpacingScale: barSpacingScale ?? this.barSpacingScale,
       fftSmoothing: fftSmoothing ?? this.fftSmoothing,
@@ -112,7 +114,7 @@ class WaveformParams {
 }
 
 class PainterParams {
-  PainterParams({
+  const PainterParams({
     this.backgroundColor = Colors.black,
     this.backgroundGradient,
     this.barColor = Colors.yellow,
@@ -120,6 +122,7 @@ class PainterParams {
     this.audioScale = 1,
     this.fftParams = const FftParams.safe(),
     this.waveformParams = const WaveformParams(),
+    this.shaderParams = const ShaderParams(),
   });
 
   /// The data manager used to store the waveform data displayed
@@ -149,11 +152,15 @@ class PainterParams {
   final double audioScale;
 
   /// The parameters for the FFT. It displays only the bars between
-  /// minIndex and maxIndex.
+  /// minBinIndex and maxBinIndex.
   final FftParams fftParams;
 
   /// The parameters for the waveform.
   final WaveformParams waveformParams;
+
+  /// The parameters for the shader.
+  final ShaderParams shaderParams;
+
 
   PainterParams copyWith({
     Color? backgroundColor,
@@ -161,9 +168,9 @@ class PainterParams {
     Gradient? backgroundGradient,
     Gradient? barGradient,
     double? audioScale,
-    double? fftSmoothing,
     FftParams? fftParams,
     WaveformParams? waveformParams,
+    ShaderParams? shaderParams,
   }) {
     return PainterParams(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -173,6 +180,7 @@ class PainterParams {
       audioScale: audioScale ?? this.audioScale,
       fftParams: fftParams ?? this.fftParams,
       waveformParams: waveformParams ?? this.waveformParams,
+      shaderParams: shaderParams ?? this.shaderParams,
     );
   }
 }

@@ -19,7 +19,7 @@ class Fft extends StatelessWidget {
     return ClipRect(
       child: CustomPaint(
         painter: FftPainter(
-          getDataCallback: dataCallback,
+          dataCallback: dataCallback,
           params: params,
         ),
       ),
@@ -30,19 +30,19 @@ class Fft extends StatelessWidget {
 /// Custom painter to draw the wave data.
 class FftPainter extends CustomPainter {
   FftPainter({
-    required this.getDataCallback,
+    required this.dataCallback,
     required this.params,
   });
 
-  final DataCallback getDataCallback;
+  final DataCallback dataCallback;
   final PainterParams params;
 
   void processWaveData(Float32List currentWaveData) {
     final buffer = params.dataManager.data;
     final barCount = params.fftParams.shrinkTo;
-    final minIndex = params.fftParams.minIndex;
-    final maxIndex = params.fftParams.maxIndex;
-    final range = maxIndex - minIndex + 1;
+    final minBinIndex = params.fftParams.minBinIndex;
+    final maxBinIndex = params.fftParams.maxBinIndex;
+    final range = maxBinIndex - minBinIndex + 1;
     final chunkSize = range / barCount;
 
     for (var i = 0; i < barCount; i++) {
@@ -50,11 +50,11 @@ class FftPainter extends CustomPainter {
       var count = 0;
 
       // Calculate chunk boundaries
-      final startIdx = (i * chunkSize + minIndex).floor();
-      final endIdx = ((i + 1) * chunkSize + minIndex).ceil();
+      final startIdx = (i * chunkSize + minBinIndex).floor();
+      final endIdx = ((i + 1) * chunkSize + minBinIndex).ceil();
 
       // Ensure we don't exceed maxIndex
-      final effectiveEndIdx = endIdx.clamp(0, maxIndex + 1);
+      final effectiveEndIdx = endIdx.clamp(0, maxBinIndex + 1);
 
       for (var j = startIdx; j < effectiveEndIdx; j++) {
         sum += currentWaveData[j];
@@ -67,7 +67,7 @@ class FftPainter extends CustomPainter {
   }
 
   int _calculateEffectiveBarCount() {
-    return params.fftParams.maxIndex - params.fftParams.minIndex + 1;
+    return params.fftParams.maxBinIndex - params.fftParams.minBinIndex + 1;
   }
 
   @override
@@ -76,7 +76,7 @@ class FftPainter extends CustomPainter {
 
     params.dataManager.ensureCapacity(effectiveBarCount);
 
-    var currentFftData = getDataCallback();
+    var currentFftData = dataCallback();
     if (currentFftData.isNotEmpty) {
       processWaveData(currentFftData);
     }
@@ -117,9 +117,8 @@ class FftPainter extends CustomPainter {
       canvas.drawRect(
         Rect.fromLTWH(
           barX,
-          // (size.height - barHeight) / 2,
           size.height - barHeight,
-          barWidth * params.fftParams.barSpacingScale,
+          barWidth * (1.0 - params.fftParams.barSpacingScale),
           barHeight,
         ),
         paint,

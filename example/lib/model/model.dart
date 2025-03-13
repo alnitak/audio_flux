@@ -7,10 +7,12 @@ class AudioVisualizerModel extends ChangeNotifier {
   PainterParams _painterParams = PainterParams();
   FftParams _fftParams = const FftParams.safe();
   WaveformParams _waveformParams = const WaveformParams();
+  ShaderParams _shaderParams = ShaderParams();
 
   PainterParams get painterParams => _painterParams;
   FftParams get fftParams => _fftParams;
   WaveformParams get waveformParams => _waveformParams;
+  ShaderParams get shaderParams => _shaderParams;
 
   void updateFluxType({FluxType? type}) {
     fluxType = type ?? FluxType.fft;
@@ -40,15 +42,15 @@ class AudioVisualizerModel extends ChangeNotifier {
   }
 
   void updateFftParams({
-    int? minIndex,
-    int? maxIndex,
+    int? minBinIndex,
+    int? maxBinIndex,
     int? shrinkTo,
     double? barSpacingScale,
     double? fftSmoothing,
   }) {
     _fftParams = _fftParams.copyWith(
-      minIndex: minIndex,
-      maxIndex: maxIndex,
+      minBinIndex: minBinIndex,
+      maxBinIndex: maxBinIndex,
       shrinkTo: shrinkTo,
       barSpacingScale: barSpacingScale,
       fftSmoothing: fftSmoothing,
@@ -68,6 +70,26 @@ class AudioVisualizerModel extends ChangeNotifier {
       chunkSize: chunkSize,
     );
     _painterParams = _painterParams.copyWith(waveformParams: _waveformParams);
+    notifyListeners();
+  }
+
+  void updateShaderParams({
+    int? minBinIndex,
+    int? maxBinIndex,
+    double? fftSmoothing,
+    List<ShaderParam>? params,
+    List<ShaderParamRange>? paramsRange,
+  }) {
+    _shaderParams = _shaderParams.copyWith(
+      fftSmoothing: _shaderParams.fftSmoothing.copyWith(value: fftSmoothing),
+      bins: _shaderParams.bins.copyWith(
+        minValue: minBinIndex?.toDouble(),
+        maxValue: maxBinIndex?.toDouble(),
+      ),
+      params: params,
+      paramsRange: paramsRange,
+    );
+    _painterParams = _painterParams.copyWith(shaderParams: _shaderParams);
     notifyListeners();
   }
 }

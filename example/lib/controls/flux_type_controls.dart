@@ -19,7 +19,6 @@ class FluxTypeControls extends StatefulWidget {
 class _FluxTypeControlsState extends State<FluxTypeControls> {
   @override
   Widget build(BuildContext context) {
-    //
     return Wrap(
       runSpacing: 12,
       spacing: 22,

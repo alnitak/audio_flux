@@ -19,7 +19,7 @@ class Waveform extends StatelessWidget {
     return ClipRect(
       child: CustomPaint(
         painter: WavePainter(
-          getDataCallback: dataCallback,
+          dataCallback: dataCallback,
           params: params,
         ),
       ),
@@ -30,11 +30,11 @@ class Waveform extends StatelessWidget {
 /// Custom painter to draw the wave data.
 class WavePainter extends CustomPainter {
   WavePainter({
-    required this.getDataCallback,
+    required this.dataCallback,
     required this.params,
   });
 
-  final DataCallback getDataCallback;
+  final DataCallback dataCallback;
   final PainterParams params;
 
   void processWaveData(Float32List currentWaveData) {
@@ -79,7 +79,7 @@ class WavePainter extends CustomPainter {
 
     params.dataManager.ensureCapacity(effectiveBarCount);
 
-    var currentWaveData = getDataCallback();
+    var currentWaveData = dataCallback();
     if (currentWaveData.isNotEmpty) {
       processWaveData(currentWaveData);
     }
@@ -119,8 +119,8 @@ class WavePainter extends CustomPainter {
       canvas.drawRect(
         Rect.fromLTWH(
           barX,
-          (size.height - barHeight) / 2,
-          barWidth * params.waveformParams.barSpacingScale,
+          (size.height - barHeight) * 0.5,
+          barWidth * (1.0 - params.waveformParams.barSpacingScale),
           barHeight,
         ),
         paint,

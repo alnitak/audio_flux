@@ -36,13 +36,13 @@ class _FftControlsState extends State<FftControls> {
             min: 0,
             max: 255,
             values: RangeValues(
-              widget.model.fftParams.minIndex.toDouble(),
-              widget.model.fftParams.maxIndex.toDouble(),
+              widget.model.fftParams.minBinIndex.toDouble(),
+              widget.model.fftParams.maxBinIndex.toDouble(),
             ),
             onChanged: (value) {
               widget.model.updateFftParams(
-                minIndex: value.start.toInt(),
-                maxIndex: value.end.toInt(),
+                minBinIndex: value.start.toInt(),
+                maxBinIndex: value.end.toInt(),
               );
               setState(() {});
             },
@@ -60,7 +60,7 @@ class _FftControlsState extends State<FftControls> {
           SliderParam(
             label: 'shrinkTo',
             min: -1.0,
-            max: widget.model.fftParams.maxIndex.toDouble(),
+            max: widget.model.fftParams.maxBinIndex.toDouble(),
             value: widget.model.fftParams.shrinkTo.toDouble() - 1,
             onChanged: (value) {
               if (value < 0) value = -1;

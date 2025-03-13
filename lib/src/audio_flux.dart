@@ -1,12 +1,17 @@
+import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:audio_flux/src/painters/fft.dart';
+import 'package:audio_flux/src/shaders/shader.dart';
+import 'package:audio_flux/src/utils/bmp_header.dart';
 import 'package:audio_flux/src/utils/painter_params.dart';
 import 'package:audio_flux/src/painters/waveform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
-import 'package:flutter_soloud/flutter_soloud.dart';
+import 'package:flutter_soloud/flutter_soloud.dart' show AudioData, GetSamplesKind, SoLoud;
+import 'package:shader_buffers/shader_buffers.dart';
 
 enum DataSources {
   soloud,
@@ -16,6 +21,7 @@ enum DataSources {
 enum FluxType {
   waveform,
   fft,
+  shader,
 }
 
 typedef DataCallback = Float32List Function({bool alwaysReturnData});
@@ -36,28 +42,17 @@ class AudioFlux extends StatefulWidget {
   State<AudioFlux> createState() => _AudioFluxState();
 }
 
-class _AudioFluxState extends State<AudioFlux>
-    with SingleTickerProviderStateMixin {
+class _AudioFluxState extends State<AudioFlux> {
   final recorder = Recorder.instance;
   final soloud = SoLoud.instance;
   DataCallback? dataCallback;
   AudioData? audioData;
-  Ticker? ticker;
-  Widget? painterWidget;
+  Widget? visualizerWidget;
 
   @override
   void initState() {
     super.initState();
-    setupWidgetAndCallback();
-    ticker = createTicker((_) {
-      if (mounted) {
-        if (widget.dataSource == DataSources.soloud) {
-          audioData!.updateSamples();
-        }
-        setState(() {});
-      }
-    });
-    ticker!.start();
+    // setupWidgetAndCallback();
   }
 
   @override
@@ -66,63 +61,100 @@ class _AudioFluxState extends State<AudioFlux>
     super.didUpdateWidget(oldWidget);
   }
 
+  /// Set the type of data acquired as wave.
+  void _setDataAsWave() {
+    switch (widget.dataSource) {
+      case DataSources.soloud:
+        audioData?.dispose();
+        audioData = AudioData(GetSamplesKind.wave);
+        dataCallback = ({bool alwaysReturnData = false}) =>
+            audioData!.getAudioData(alwaysReturnData: alwaysReturnData);
+        break;
+      case DataSources.recorder:
+        audioData?.dispose();
+        audioData = null;
+        dataCallback = ({bool alwaysReturnData = false}) =>
+            Recorder.instance.getWave(alwaysReturnData: alwaysReturnData);
+        break;
+    }
+  }
+
+  /// Set the type of data acquired as linear.
+  void _setDataAsLinear() {
+    switch (widget.dataSource) {
+      case DataSources.soloud:
+        audioData?.dispose();
+        audioData = AudioData(GetSamplesKind.linear);
+        SoLoud.instance
+            .setFftSmoothing(widget.painterParams.fftParams.fftSmoothing);
+        dataCallback = ({bool alwaysReturnData = true}) =>
+            audioData!.getAudioData(alwaysReturnData: alwaysReturnData);
+        break;
+      case DataSources.recorder:
+        audioData?.dispose();
+        audioData = null;
+        Recorder.instance
+            .setFftSmoothing(widget.painterParams.fftParams.fftSmoothing);
+        dataCallback = ({bool alwaysReturnData = true}) =>
+            Recorder.instance.getTexture(alwaysReturnData: alwaysReturnData);
+        break;
+    }
+  }
+
   @override
   void dispose() {
-    ticker?.dispose();
     audioData?.dispose();
     soloud.deinit();
     recorder.deinit();
     super.dispose();
   }
 
-  void setupWidgetAndCallback() {
+  Future<void> setupWidgetAndCallback() async {
     switch (widget.fluxType) {
       case FluxType.waveform:
 
         /// Setup the painter and the callback needed by [FluxType.waveform].
-        switch (widget.dataSource) {
-          case DataSources.soloud:
-            audioData?.dispose();
-            audioData = AudioData(GetSamplesKind.wave);
-            dataCallback = ({bool alwaysReturnData = false}) =>
-                audioData!.getAudioData(alwaysReturnData: alwaysReturnData);
-            break;
-          case DataSources.recorder:
-            dataCallback = ({bool alwaysReturnData = false}) =>
-                Recorder.instance.getWave(alwaysReturnData: alwaysReturnData);
-            break;
-        }
-        painterWidget = Waveform(
-          dataCallback: dataCallback!,
-          params: widget.painterParams,
+        _setDataAsWave();
+        visualizerWidget = SamplerTickerUpdater(
+          audioData: audioData,
+          child: Waveform(
+            dataCallback: dataCallback!,
+            params: widget.painterParams,
+          ),
         );
         break;
 
       case FluxType.fft:
 
         /// Setup the painter and the callback needed by [FluxType.fft].
-        switch (widget.dataSource) {
-          case DataSources.soloud:
-            audioData?.dispose();
-            audioData = AudioData(GetSamplesKind.linear);
-            SoLoud.instance
-                .setFftSmoothing(widget.painterParams.fftParams.fftSmoothing);
-            dataCallback = ({bool alwaysReturnData = true}) =>
-                audioData!.getAudioData(alwaysReturnData: alwaysReturnData);
-            break;
-          case DataSources.recorder:
-            Recorder.instance
-                .setFftSmoothing(widget.painterParams.fftParams.fftSmoothing);
-            dataCallback = ({bool alwaysReturnData = true}) => Recorder.instance
-                .getTexture(alwaysReturnData: alwaysReturnData);
-            break;
-        }
-        painterWidget = Fft(
+        _setDataAsLinear();
+        visualizerWidget = SamplerTickerUpdater(
+          audioData: audioData,
+          child: Fft(
+            dataCallback: dataCallback!,
+            params: widget.painterParams,
+          ),
+        );
+        break;
+
+      case FluxType.shader:
+      
+        _setDataAsLinear();
+        visualizerWidget = Shader(
           dataCallback: dataCallback!,
+          audioData: audioData,
           params: widget.painterParams,
         );
         break;
     }
+  }
+
+  Future<ui.Image?> buildImage(Uint8List bmp) async {
+    final completer = Completer<ui.Image>();
+
+    ui.decodeImageFromList(bmp, completer.complete);
+
+    return completer.future;
   }
 
   @override
@@ -136,36 +168,81 @@ class _AudioFluxState extends State<AudioFlux>
     }
 
     return Builder(
-        key: UniqueKey(),
-        builder: (context) {
-          return Column(
-            children: [
-              SizedBox(
-                width: 500,
-                height: 300,
-                child: painterWidget!,
-              ),
-              if (widget.fluxType == FluxType.fft)
-                SizedBox(
-                  width: 500,
-                  height: 300,
-                  child: ColoredBox(
-                    color: Colors.black,
-                    child: RepaintBoundary(
-                      child: ClipRRect(
-                        child: CustomPaint(
-                          painter: WavePainterOrig(
-                            dataCallback: dataCallback,
-                            painterParams: widget.painterParams,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          );
-        });
+      builder: (context) {
+        return Column(
+          children: [
+            SizedBox(
+              width: 500,
+              height: 300,
+              child: visualizerWidget!,
+            ),
+            // if (widget.fluxType == FluxType.fft)
+            //   SizedBox(
+            //     width: 500,
+            //     height: 300,
+            //     child: ColoredBox(
+            //       color: Colors.black,
+            //       child: RepaintBoundary(
+            //         child: ClipRRect(
+            //           child: CustomPaint(
+            //             painter: WavePainterOrig(
+            //               dataCallback: dataCallback,
+            //               painterParams: widget.painterParams,
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class SamplerTickerUpdater extends StatefulWidget {
+  const SamplerTickerUpdater({
+    super.key,
+    required this.child,
+    required this.audioData,
+  });
+
+  final Widget child;
+  final AudioData? audioData;
+
+  @override
+  State<SamplerTickerUpdater> createState() => _SamplerTickerUpdaterState();
+}
+
+class _SamplerTickerUpdaterState extends State<SamplerTickerUpdater>
+    with SingleTickerProviderStateMixin {
+  late Ticker ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    ticker = createTicker((_) {
+      if (mounted) {
+        widget.audioData?.updateSamples();
+        setState(() {});
+      }
+    });
+    ticker.start();
+  }
+
+  @override
+  void dispose() {
+    ticker.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: UniqueKey(),
+      child: widget.child,
+    );
   }
 }
 
