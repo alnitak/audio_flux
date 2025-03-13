@@ -27,7 +27,7 @@ class _WaveControlsState extends State<WaveControls> {
             max: 30.0,
             value: widget.model.waveformParams.barsWidth.toDouble(),
             onChanged: (value) {
-              widget.model.updateWaveformParams(barsWidth: value.toInt());
+              widget.model.updateWaveformPainterParams(barsWidth: value.toInt());
               setState(() {});
             },
           ),
@@ -37,7 +37,7 @@ class _WaveControlsState extends State<WaveControls> {
             max: 1.0,
             value: widget.model.waveformParams.barSpacingScale.toDouble(),
             onChanged: (value) {
-              widget.model.updateWaveformParams(barSpacingScale: value);
+              widget.model.updateWaveformPainterParams(barSpacingScale: value);
               setState(() {});
             },
           ),
@@ -47,7 +47,7 @@ class _WaveControlsState extends State<WaveControls> {
             max: 256,
             value: widget.model.waveformParams.chunkSize.toDouble(),
             onChanged: (value) {
-              widget.model.updateWaveformParams(chunkSize: value.toInt());
+              widget.model.updateWaveformPainterParams(chunkSize: value.toInt());
               setState(() {});
             },
           ),

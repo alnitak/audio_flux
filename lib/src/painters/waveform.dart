@@ -1,6 +1,6 @@
 import 'dart:typed_data' show Float32List;
 
-import 'package:audio_flux/src/utils/painter_params.dart';
+import 'package:audio_flux/src/utils/model_params.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_flux/src/audio_flux.dart';
 
@@ -12,7 +12,7 @@ class Waveform extends StatelessWidget {
   });
 
   final DataCallback dataCallback;
-  final PainterParams params;
+  final ModelParams params;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class WavePainter extends CustomPainter {
   });
 
   final DataCallback dataCallback;
-  final PainterParams params;
+  final ModelParams params;
 
   void processWaveData(Float32List currentWaveData) {
     final buffer = params.dataManager.data;

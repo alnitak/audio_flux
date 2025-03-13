@@ -58,7 +58,7 @@ class _MainAppState extends State<MainApp> {
   }
 
   void setupGradients() {
-    model.updatePainterParams(
+    model.updateModelParams(
         backgroundGradient: const LinearGradient(
           colors: [
             Color.fromARGB(255, 7, 28, 148),
@@ -197,7 +197,7 @@ class _MainAppState extends State<MainApp> {
                   return AudioFlux(
                     fluxType: model.fluxType,
                     dataSource: model.dataSource,
-                    painterParams: model.painterParams,
+                    modelParams: model.modelParams,
                   );
                 },
               ),

@@ -4,14 +4,12 @@ import 'dart:ui' as ui;
 
 import 'package:audio_flux/src/painters/fft.dart';
 import 'package:audio_flux/src/shaders/shader.dart';
-import 'package:audio_flux/src/utils/bmp_header.dart';
-import 'package:audio_flux/src/utils/painter_params.dart';
+import 'package:audio_flux/src/utils/model_params.dart';
 import 'package:audio_flux/src/painters/waveform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_soloud/flutter_soloud.dart' show AudioData, GetSamplesKind, SoLoud;
-import 'package:shader_buffers/shader_buffers.dart';
 
 enum DataSources {
   soloud,
@@ -21,7 +19,7 @@ enum DataSources {
 enum FluxType {
   waveform,
   fft,
-  shader,
+  shader
 }
 
 typedef DataCallback = Float32List Function({bool alwaysReturnData});
@@ -31,12 +29,12 @@ class AudioFlux extends StatefulWidget {
     super.key,
     required this.dataSource,
     required this.fluxType,
-    required this.painterParams,
+    required this.modelParams,
   });
 
   final DataSources dataSource;
   final FluxType fluxType;
-  final PainterParams painterParams;
+  final ModelParams modelParams;
 
   @override
   State<AudioFlux> createState() => _AudioFluxState();
@@ -86,7 +84,7 @@ class _AudioFluxState extends State<AudioFlux> {
         audioData?.dispose();
         audioData = AudioData(GetSamplesKind.linear);
         SoLoud.instance
-            .setFftSmoothing(widget.painterParams.fftParams.fftSmoothing);
+            .setFftSmoothing(widget.modelParams.fftParams.fftSmoothing);
         dataCallback = ({bool alwaysReturnData = true}) =>
             audioData!.getAudioData(alwaysReturnData: alwaysReturnData);
         break;
@@ -94,7 +92,7 @@ class _AudioFluxState extends State<AudioFlux> {
         audioData?.dispose();
         audioData = null;
         Recorder.instance
-            .setFftSmoothing(widget.painterParams.fftParams.fftSmoothing);
+            .setFftSmoothing(widget.modelParams.fftParams.fftSmoothing);
         dataCallback = ({bool alwaysReturnData = true}) =>
             Recorder.instance.getTexture(alwaysReturnData: alwaysReturnData);
         break;
@@ -119,7 +117,7 @@ class _AudioFluxState extends State<AudioFlux> {
           audioData: audioData,
           child: Waveform(
             dataCallback: dataCallback!,
-            params: widget.painterParams,
+            params: widget.modelParams,
           ),
         );
         break;
@@ -132,7 +130,7 @@ class _AudioFluxState extends State<AudioFlux> {
           audioData: audioData,
           child: Fft(
             dataCallback: dataCallback!,
-            params: widget.painterParams,
+            params: widget.modelParams,
           ),
         );
         break;
@@ -143,7 +141,7 @@ class _AudioFluxState extends State<AudioFlux> {
         visualizerWidget = Shader(
           dataCallback: dataCallback!,
           audioData: audioData,
-          params: widget.painterParams,
+          params: widget.modelParams,
         );
         break;
     }
@@ -176,24 +174,6 @@ class _AudioFluxState extends State<AudioFlux> {
               height: 300,
               child: visualizerWidget!,
             ),
-            // if (widget.fluxType == FluxType.fft)
-            //   SizedBox(
-            //     width: 500,
-            //     height: 300,
-            //     child: ColoredBox(
-            //       color: Colors.black,
-            //       child: RepaintBoundary(
-            //         child: ClipRRect(
-            //           child: CustomPaint(
-            //             painter: WavePainterOrig(
-            //               dataCallback: dataCallback,
-            //               painterParams: widget.painterParams,
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
           ],
         );
       },
@@ -243,70 +223,5 @@ class _SamplerTickerUpdaterState extends State<SamplerTickerUpdater>
       key: UniqueKey(),
       child: widget.child,
     );
-  }
-}
-
-class WavePainterOrig extends CustomPainter {
-  const WavePainterOrig({
-    required this.dataCallback,
-    required this.painterParams,
-  });
-  final DataCallback? dataCallback;
-  final PainterParams painterParams;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (dataCallback == null) {
-      return;
-    }
-    final samples = dataCallback!();
-    // Using `alwaysReturnData: true` this will always return a non-empty list
-    // even if the audio data is the same as the previous one.
-    if (samples.isEmpty) {
-      return;
-    }
-    final barWidth = size.width / 256;
-    final paint = Paint()
-      ..strokeWidth = barWidth * 0.8
-      ..color = Colors.yellowAccent;
-
-    double waveHeight;
-    double fftHeight;
-
-    for (var i = 0; i < 256; i++) {
-      try {
-        final fftData = samples[i] * painterParams.audioScale;
-        final waveData = samples[i + 256] * painterParams.audioScale;
-        waveHeight = size.height * waveData * 0.5;
-        fftHeight = size.height * fftData;
-      } on Exception {
-        waveHeight = 0;
-        fftHeight = 0;
-      }
-
-      /// Draw the wave
-      canvas
-        ..drawRect(
-          Rect.fromLTRB(
-            barWidth * i,
-            size.height / 4 - waveHeight / 2,
-            barWidth * (i + 1),
-            size.height / 4 + waveHeight / 2,
-          ),
-          paint,
-        )
-
-        /// Draw the fft
-        ..drawLine(
-          Offset(barWidth * i, size.height),
-          Offset(barWidth * i, size.height - fftHeight),
-          paint,
-        );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }

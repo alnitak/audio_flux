@@ -1,7 +1,8 @@
 #include <common/common_header.frag>
 
 uniform sampler2D iChannel0;
-
+uniform float bands;
+uniform float segs;
 
 // credits:
 // https://www.shadertoy.com/view/Mlj3WV
@@ -22,8 +23,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     uv = vec2(uv.x, 1.0-uv.y);
 
     // quantize coordinates
-    const float bands = 30.0;
-    const float segs = 40.0;
+    // const float bands = 30.0;
+    // const float segs = 40.0;
     vec2 p;
     p.x = floor(uv.x*bands)/bands;
     p.y = floor(uv.y*segs)/segs;
@@ -47,6 +48,5 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     fragColor = vec4(ledColor, 1.0);
 }
 // ------ END SHADERTOY CODE -----
-
 
 #include <common/main_shadertoy.frag>

@@ -21,7 +21,7 @@ class Shader extends StatefulWidget {
 
   final DataCallback dataCallback;
   final AudioData? audioData;
-  final PainterParams params;
+  final ModelParams params;
 
   @override
   State<Shader> createState() => _ShaderState();
@@ -34,20 +34,21 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
   IChannel? iChannel;
   late ShaderController shaderController;
 
-  late ShaderParams sp;
   late int cols;
 
   @override
   void initState() {
     super.initState();
 
-    sp = widget.params.shaderParams;
-    cols = (sp.bins.maxValue - sp.bins.minValue).toInt() + 1;
+    cols = (widget.params.fftParams.maxBinIndex -
+                widget.params.fftParams.minBinIndex)
+            .toInt() +
+        1;
     linearData = Bmp32Header.setHeader(cols, 2);
 
     shaderController = ShaderController();
     mainImage = LayerBuffer(
-      shaderAssetsName: 'assets/shaders/test1.frag',
+      shaderAssetsName: widget.params.shaderParams.shaderPath,
     );
 
     ticker = createTicker((_) {
@@ -61,8 +62,10 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    sp = widget.params.shaderParams;
-    cols = (sp.bins.maxValue - sp.bins.minValue).toInt() + 1;
+    cols = (widget.params.fftParams.maxBinIndex -
+                widget.params.fftParams.minBinIndex)
+            .toInt() +
+        1;
   }
 
   @override
@@ -76,8 +79,8 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     var data = widget.dataCallback();
     if (data.length < 512) return Uint8List(0);
 
-    final int maxBinIndex = widget.params.shaderParams.bins.maxValue.toInt();
-    final int minBinIndex = widget.params.shaderParams.bins.minValue.toInt();
+    final int maxBinIndex = widget.params.fftParams.maxBinIndex.toInt();
+    final int minBinIndex = widget.params.fftParams.minBinIndex.toInt();
     final int newCols = maxBinIndex - minBinIndex + 1;
     if (newCols != cols) {
       cols = newCols;
@@ -128,6 +131,20 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     } else {
       iChannel!.updateTexture(ret);
     }
+    List<Uniform> uniforms = [];
+    for (var i = 0; i < (widget.params.shaderParams.params?.length ?? 0); i++) {
+      uniforms.add(Uniform(
+        name: widget.params.shaderParams.params![i].label,
+        value: widget.params.shaderParams.params![i].value,
+        defaultValue: widget.params.shaderParams.params![i].value,
+        range: RangeValues(
+          widget.params.shaderParams.params![i].min,
+          widget.params.shaderParams.params![i].max,
+        ),
+      ));
+    }
+    mainImage.uniforms = Uniforms(uniforms);
+
     return ret;
   }
 

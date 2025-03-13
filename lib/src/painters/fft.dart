@@ -1,6 +1,6 @@
 import 'dart:typed_data' show Float32List;
 
-import 'package:audio_flux/src/utils/painter_params.dart';
+import 'package:audio_flux/src/utils/model_params.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_flux/src/audio_flux.dart';
 
@@ -12,7 +12,7 @@ class Fft extends StatelessWidget {
   });
 
   final DataCallback dataCallback;
-  final PainterParams params;
+  final ModelParams params;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,11 @@ class FftPainter extends CustomPainter {
   });
 
   final DataCallback dataCallback;
-  final PainterParams params;
+  final ModelParams params;
 
   void processWaveData(Float32List currentWaveData) {
     final buffer = params.dataManager.data;
-    final barCount = params.fftParams.shrinkTo;
+    final barCount = params.fftPainterParams.shrinkTo;
     final minBinIndex = params.fftParams.minBinIndex;
     final maxBinIndex = params.fftParams.maxBinIndex;
     final range = maxBinIndex - minBinIndex + 1;
@@ -107,7 +107,7 @@ class FftPainter extends CustomPainter {
     }
 
     // Draw the bars
-    final barCount = params.fftParams.shrinkTo - 1;
+    final barCount = params.fftPainterParams.shrinkTo - 1;
     final barWidth = size.width / barCount;
     for (var i = 0; i < barCount; i++) {
       final value = params.dataManager.data[i];
@@ -118,7 +118,7 @@ class FftPainter extends CustomPainter {
         Rect.fromLTWH(
           barX,
           size.height - barHeight,
-          barWidth * (1.0 - params.fftParams.barSpacingScale),
+          barWidth * (1.0 - params.fftPainterParams.barSpacingScale),
           barHeight,
         ),
         paint,

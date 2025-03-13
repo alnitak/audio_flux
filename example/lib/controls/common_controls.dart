@@ -25,9 +25,9 @@ class _CommonControlsState extends State<CommonControls> {
             label: 'audioScale',
             min: 0.1,
             max: 10.0,
-            value: widget.model.painterParams.audioScale,
+            value: widget.model.modelParams.audioScale,
             onChanged: (value) {
-              widget.model.updatePainterParams(audioScale: value);
+              widget.model.updateModelParams(audioScale: value);
               setState(() {});
             },
           ),

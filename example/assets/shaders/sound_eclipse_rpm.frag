@@ -1,14 +1,9 @@
-#version 460 core
-#include <flutter/runtime_effect.glsl>
-precision mediump float;
+#include <common/common_header.frag>
 
 uniform sampler2D iChannel0;
-uniform vec2 uResolution;
-uniform float iTime;
-
-out vec4 fragColor;
-
-vec3 iResolution;
+uniform float RADIUS;
+uniform float BRIGHTNESS;
+uniform float SPEED;
 
 // credits:
 // https://www.shadertoy.com/view/ls3BDH
@@ -20,9 +15,9 @@ vec3 iResolution;
 
 const float FREQ_RANGE = 64.0;
 const float PI = 3.1415;
-const float RADIUS = 0.6;
-const float BRIGHTNESS = 0.2;
-const float SPEED = 0.5;
+// const float RADIUS = 0.6;
+// const float BRIGHTNESS = 0.2;
+// const float SPEED = 0.5;
 
 //convert HSV to RGB
 vec3 hsv2rgb(vec3 c){
@@ -100,13 +95,4 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 }
 // ------ END SHADERTOY CODE -----
 
-
-
-void main() {
-    iResolution = vec3(uResolution.x, uResolution.y, 0.);
-
-    mainImage( fragColor, FlutterFragCoord().xy );
-}
-
-
-
+#include <common/main_shadertoy.frag>

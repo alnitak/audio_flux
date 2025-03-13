@@ -1,4 +1,5 @@
 import 'package:example/model/model.dart';
+import 'package:example/shaders/shaders.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_flux/audio_flux.dart';
 
@@ -24,11 +25,28 @@ class _FluxTypeControlsState extends State<FluxTypeControls> {
       spacing: 22,
       children: [
         for (var i = 0; i < FluxType.values.length; i++)
+          if (FluxType.values[i].name != 'shader')
+            FluxCheckBox(
+              label: FluxType.values[i].name,
+              value: widget.model.fluxType.index == i,
+              onChanged: (value) {
+                widget.model.updateFluxType(type: FluxType.values[i]);
+                widget.onChanged();
+              },
+            ),
+        for (var i = 0; i < Shaders.shaderParams.length; i++)
           FluxCheckBox(
-            label: FluxType.values[i].name,
-            value: widget.model.fluxType.index == i,
+            label: Shaders.shaderParams[i].shaderName,
+            value: widget.model.shaderParams.shaderName ==
+                Shaders.shaderParams[i].shaderName,
             onChanged: (value) {
-              widget.model.updateFluxType(type: FluxType.values[i]);
+              widget.model.updateFluxType(type: FluxType.shader);
+              widget.model.updateShaderParams(
+                shaderName: Shaders.shaderParams[i].shaderName,
+                shaderPath: Shaders.shaderParams[i].shaderPath,
+                params: Shaders.shaderParams[i].params,
+                paramsRange: Shaders.shaderParams[i].paramsRange,
+              );
               widget.onChanged();
             },
           ),

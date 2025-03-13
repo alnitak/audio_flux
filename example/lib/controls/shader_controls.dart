@@ -22,32 +22,6 @@ class _ShaderControlsState extends State<ShaderControls> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(sp.shaderName),
-          SliderParam(
-            label: sp.fftSmoothing.label,
-            min: sp.fftSmoothing.min,
-            max: sp.fftSmoothing.max,
-            value: sp.fftSmoothing.value,
-            onChanged: (value) {
-              widget.model.updateShaderParams(fftSmoothing: value);
-              setState(() {});
-            },
-          ),
-          RangeSliderParam(
-            label: sp.bins.label,
-            min: sp.bins.min,
-            max: sp.bins.max,
-            values: RangeValues(
-              sp.bins.minValue,
-              sp.bins.maxValue,
-            ),
-            onChanged: (value) {
-              widget.model.updateShaderParams(
-                minBinIndex: value.start.toInt(),
-                maxBinIndex: value.end.toInt(),
-              );
-              setState(() {});
-            },
-          ),
 
           for (var i = 0; i < (sp.params?.length ?? 0); i++)
             SliderParam(
@@ -56,7 +30,7 @@ class _ShaderControlsState extends State<ShaderControls> {
               max: sp.params![i].max,
               value: sp.params![i].value,
               onChanged: (value) {
-                List<ShaderParam> newParams = sp.params!;
+                List<ShaderParam> newParams = List.from(sp.params!);
                 newParams[i] = newParams[i].copyWith(value: value);
                 widget.model.updateShaderParams(
                   params: newParams,
@@ -75,7 +49,7 @@ class _ShaderControlsState extends State<ShaderControls> {
                 sp.paramsRange![i].maxValue,
               ),
               onChanged: (value) {
-                List<ShaderParamRange> newParams = sp.paramsRange!;
+                List<ShaderParamRange> newParams = List.from(sp.paramsRange!);
                 newParams[i] = newParams[i].copyWith(
                   minValue: value.start,
                   maxValue: value.end,

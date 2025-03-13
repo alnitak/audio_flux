@@ -47,27 +47,6 @@ class _FftControlsState extends State<FftControls> {
               setState(() {});
             },
           ),
-          SliderParam(
-            label: 'barSpacingScale',
-            min: 0.0,
-            max: 1.0,
-            value: widget.model.fftParams.barSpacingScale,
-            onChanged: (value) {
-              widget.model.updateFftParams(barSpacingScale: value);
-              setState(() {});
-            },
-          ),
-          SliderParam(
-            label: 'shrinkTo',
-            min: -1.0,
-            max: widget.model.fftParams.maxBinIndex.toDouble(),
-            value: widget.model.fftParams.shrinkTo.toDouble() - 1,
-            onChanged: (value) {
-              if (value < 0) value = -1;
-              widget.model.updateFftParams(shrinkTo: value.toInt());
-              setState(() {});
-            },
-          ),
         ],
       ),
     );

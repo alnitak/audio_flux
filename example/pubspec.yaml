@@ -35,9 +35,9 @@ flutter:
     - assets/audio/
 
   shaders:
-    - assets/shaders/test1.frag
+    - assets/shaders/2d_led_spectrum.frag
     - assets/shaders/test2.frag
-    - assets/shaders/test3.frag
+    - assets/shaders/sound_eclipse_rpm.frag
     - assets/shaders/test4.frag
     - assets/shaders/test5.frag
     - assets/shaders/test6.frag
