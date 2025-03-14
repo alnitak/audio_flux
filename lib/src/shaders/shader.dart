@@ -30,11 +30,12 @@ class Shader extends StatefulWidget {
 class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
   late final Ticker ticker;
   late Bmp32Header linearData;
-  late final LayerBuffer mainImage;
+  LayerBuffer? mainImage;
   IChannel? iChannel;
   late ShaderController shaderController;
 
   late int cols;
+  String? currentShaderPath;
 
   @override
   void initState() {
@@ -47,16 +48,16 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     linearData = Bmp32Header.setHeader(cols, 2);
 
     shaderController = ShaderController();
+    currentShaderPath = widget.params.shaderParams.shaderPath;
     mainImage = LayerBuffer(
       shaderAssetsName: widget.params.shaderParams.shaderPath,
     );
 
     ticker = createTicker((_) {
-      if (mounted) {
-        setState(() {});
-      }
+      buildImageForLinear();
     });
-    ticker.start();
+
+    buildImageForLinear();
   }
 
   @override
@@ -127,7 +128,7 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     final ret = await completer.future;
     if (iChannel == null) {
       iChannel = IChannel(texture: ret);
-      mainImage.setChannels([iChannel!]);
+      mainImage!.setChannels([iChannel!]);
     } else {
       iChannel!.updateTexture(ret);
     }
@@ -143,25 +144,32 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
         ),
       ));
     }
-    mainImage.uniforms = Uniforms(uniforms);
+    mainImage!.uniforms = Uniforms(uniforms);
 
     return ret;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ui.Image?>(
-      future: buildImageForLinear(),
-      builder: (context, dataTexture) {
-        if (!dataTexture.hasData || dataTexture.hasError) {
-          return SizedBox.shrink();
-        }
+    if (mainImage == null) return SizedBox.shrink();
 
-        return ShaderBuffers(
-          mainImage: mainImage,
-          controller: shaderController,
-        );
-      },
-    );
+    /// The shader path has changed
+    if (currentShaderPath != widget.params.shaderParams.shaderPath) {
+      ticker.stop();
+      currentShaderPath = widget.params.shaderParams.shaderPath;
+      iChannel = null;
+      mainImage = LayerBuffer(
+        shaderAssetsName: widget.params.shaderParams.shaderPath,
+      );
+      buildImageForLinear();
+    }
+
+    return ShaderBuffers(
+        key: ValueKey(currentShaderPath),
+        mainImage: mainImage!,
+        controller: shaderController,
+        onShaderLoaded: (isLoaded) {
+          if (isLoaded && !ticker.isActive) ticker.start();
+        });
   }
 }

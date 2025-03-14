@@ -37,8 +37,9 @@ class _FluxTypeControlsState extends State<FluxTypeControls> {
         for (var i = 0; i < Shaders.shaderParams.length; i++)
           FluxCheckBox(
             label: Shaders.shaderParams[i].shaderName,
-            value: widget.model.shaderParams.shaderName ==
-                Shaders.shaderParams[i].shaderName,
+            value: widget.model.fluxType == FluxType.shader &&
+                widget.model.shaderParams.shaderName ==
+                    Shaders.shaderParams[i].shaderName,
             onChanged: (value) {
               widget.model.updateFluxType(type: FluxType.shader);
               widget.model.updateShaderParams(
