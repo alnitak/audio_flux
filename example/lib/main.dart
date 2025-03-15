@@ -3,11 +3,12 @@ import 'dart:developer' as dev;
 import 'package:audio_flux/audio_flux.dart';
 import 'package:example/controls/controls.dart';
 import 'package:example/model/model.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:logging/logging.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   Logger.root.level = kDebugMode ? Level.FINE : Level.INFO;
@@ -46,8 +47,17 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-    setupGradients();
+    
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
+      Permission.microphone.request().isGranted.then((value) async {
+        if (!value) {
+          await [Permission.microphone].request();
+        }
+      });
+    }
 
+    setupGradients();
     initSoLoud();
   }
 
@@ -157,51 +167,71 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
       themeMode: ThemeMode.dark,
-      home: Scaffold(
-        bottomSheet: Controls(model: model),
-        body: Align(
-          alignment: Alignment.topCenter,
-          child: Column(
-            spacing: 16,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.black,
+          brightness: Brightness.dark,
+        ).copyWith(surface: const Color.fromARGB(255, 0, 30, 0)),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.black,
+          constraints: BoxConstraints(maxWidth: double.infinity),
+        ),
+      ),
+      home: MediaQuery( 
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(0.9)),
+        child: SafeArea(
+          child: Scaffold(
+            bottomSheet: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Controls(model: model),
+            ),
+            body: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
                 spacing: 16,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      await initSoLoud();
-                    },
-                    child: Text('SoLoud song'),
+                  Wrap(
+                    spacing: 16,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          await initSoLoud();
+                        },
+                        child: Text('song'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await initSoLoud2();
+                        },
+                        child: Text('audio sweep'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await initRecorder();
+                        },
+                        child: Text('recorder'),
+                      ),
+                    ],
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await initSoLoud2();
+                  ListenableBuilder(
+                    listenable: model,
+                    builder: (BuildContext context, Widget? child) {
+                      return SizedBox(
+                        width: 500,
+                        height: 300,
+                        child: AudioFlux(
+                          fluxType: model.fluxType,
+                          dataSource: model.dataSource,
+                          modelParams: model.modelParams,
+                        ),
+                      );
                     },
-                    child: Text('SoLoud audio sweep'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await initRecorder();
-                    },
-                    child: Text('start Recorder'),
                   ),
                 ],
               ),
-              ListenableBuilder(
-                listenable: model,
-                builder: (BuildContext context, Widget? child) {
-                  return AudioFlux(
-                    fluxType: model.fluxType,
-                    dataSource: model.dataSource,
-                    modelParams: model.modelParams,
-                  );
-                },
-              ),
-            ],
+            ),
           ),
         ),
       ),

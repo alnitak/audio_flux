@@ -104,7 +104,7 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
                           .clamp(-1.0, 1.0) +
                       1.0) /
                   2.0) *
-              128)
+              255)
           .toInt();
       img[x * 4 + cols * 4] = wave;
       img[x * 4 + cols * 4 + 1] = 0; // G

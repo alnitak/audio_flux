@@ -5,6 +5,11 @@
             "label": "compile linux debug",
             "command": "cd ${workspaceFolder}/example; flutter build linux -t lib/main.dart --debug",
             "type": "shell"
+        },
+        {
+            "label": "compile web wasm release",
+            "command": "cd ${workspaceFolder}/example; flutter run -d chrome --wasm --web-browser-flag '--disable-web-security' -t lib/main.dart --release",
+            "type": "shell"
         }
     ]
 }

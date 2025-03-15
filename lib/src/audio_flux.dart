@@ -48,12 +48,6 @@ class _AudioFluxState extends State<AudioFlux> {
   Widget? visualizerWidget;
 
   @override
-  void initState() {
-    super.initState();
-    // setupWidgetAndCallback();
-  }
-
-  @override
   void didUpdateWidget(covariant AudioFlux oldWidget) {
     setupWidgetAndCallback();
     super.didUpdateWidget(oldWidget);
@@ -165,19 +159,7 @@ class _AudioFluxState extends State<AudioFlux> {
       return SizedBox.shrink();
     }
 
-    return Builder(
-      builder: (context) {
-        return Column(
-          children: [
-            SizedBox(
-              width: 500,
-              height: 300,
-              child: visualizerWidget!,
-            ),
-          ],
-        );
-      },
-    );
+    return visualizerWidget!;
   }
 }
 

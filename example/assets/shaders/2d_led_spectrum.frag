@@ -4,6 +4,7 @@ uniform sampler2D iChannel0;
 uniform float bands;
 uniform float segs;
 
+// 2D LED Spectrum
 // credits:
 // https://www.shadertoy.com/view/Mlj3WV
 

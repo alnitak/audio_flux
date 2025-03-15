@@ -26,7 +26,7 @@ class _SliderParamState extends State<SliderParam> {
     return Row(
       children: [
         SizedBox(
-          width: 150,
+          width: 80,
           child: Text(widget.label),
         ),
         Expanded(
@@ -72,7 +72,7 @@ class _RangeSliderParamState extends State<RangeSliderParam> {
     return Row(
       children: [
         SizedBox(
-          width: 150,
+          width: 80,
           child: Text(widget.label),
         ),
         Expanded(
@@ -84,7 +84,7 @@ class _RangeSliderParamState extends State<RangeSliderParam> {
           ),
         ),
         SizedBox(
-          width: 150,
+          width: 90,
           child: Text('${widget.values.start.toStringAsFixed(2)} - ${widget.values.end.toStringAsFixed(2)}'),
         ),
       ],

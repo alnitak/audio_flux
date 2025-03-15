@@ -24,7 +24,7 @@ class Shaders {
       paramsRange: [],
     ),
 
-    /// 
+    /// Sound Eclipse
     ShaderParams(
       shaderName: 'SoundEclipse rpm',
       shaderPath: 'assets/shaders/sound_eclipse_rpm.frag',
@@ -48,6 +48,54 @@ class Shaders {
           value: 0.5,
         ),
       ],
+      paramsRange: [],
+    ),
+
+    /// Frequency Visualization
+    ShaderParams(
+      shaderName: 'Frequency Visualization',
+      shaderPath: 'assets/shaders/frequency_visualization.frag',
+      params: [],
+      paramsRange: [],
+    ),
+
+    /// Audio Wave Form
+    ShaderParams(
+      shaderName: 'Audio Wave Form',
+      shaderPath: 'assets/shaders/audio_wave_form.frag',
+      params: [],
+      paramsRange: [],
+    ),
+
+    /// Sound Sinus Wave
+    ShaderParams(
+      shaderName: 'Sound Sinus Wave',
+      shaderPath: 'assets/shaders/sound_sinus_wave.frag',
+      params: [],
+      paramsRange: [],
+    ),
+
+    /// Audio Visualizer - Raymarching
+    ShaderParams(
+      shaderName: 'Audio Visualizer - Raymarching',
+      shaderPath: 'assets/shaders/audio_visualizer_raymarching.frag',
+      params: [],
+      paramsRange: [],
+    ),
+
+    /// Sound Grid
+    ShaderParams(
+      shaderName: 'Sound Grid',
+      shaderPath: 'assets/shaders/sound_grid.frag',
+      params: [],
+      paramsRange: [],
+    ),
+
+    /// Smoke Rings
+    ShaderParams(
+      shaderName: 'Smoke Rings',
+      shaderPath: 'assets/shaders/smoke_rings.frag',
+      params: [],
       paramsRange: [],
     ),
   ];

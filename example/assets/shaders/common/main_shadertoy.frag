@@ -8,5 +8,8 @@ void main() {
         (iTime/iTime) * (iResolution.x/iResolution.x);
     if (tmp != 1.) tmp = 1.;
 
+    // vec2 fCoord = vec2(FlutterFragCoord().x, -FlutterFragCoord().y);
+    // mainImage( fragColor, fCoord * tmp );
+    
     mainImage( fragColor, FlutterFragCoord().xy * tmp );
 }
