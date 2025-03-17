@@ -55,7 +55,10 @@ class _MainAppState extends State<MainApp> {
         defaultTargetPlatform == TargetPlatform.iOS) {
       Permission.microphone.request().isGranted.then((value) async {
         if (!value) {
-          await [Permission.microphone].request();
+          Future.delayed(const Duration(seconds: 2), () async{
+            await [Permission.microphone].request();
+
+          });
         }
       });
     }
