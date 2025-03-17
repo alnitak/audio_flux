@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class WaveControls extends StatefulWidget {
   const WaveControls({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AudioVisualizerModel model;
@@ -18,24 +18,25 @@ class _WaveControlsState extends State<WaveControls> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           SliderParam(
             label: 'barsWidth',
-            min: 1.0,
-            max: 30.0,
+            min: 1,
+            max: 30,
             value: widget.model.waveformParams.barsWidth.toDouble(),
             onChanged: (value) {
-              widget.model.updateWaveformPainterParams(barsWidth: value.toInt());
+              widget.model
+                  .updateWaveformPainterParams(barsWidth: value.toInt());
               setState(() {});
             },
           ),
           SliderParam(
             label: 'barSpacingScale',
-            min: 0.0,
-            max: 1.0,
-            value: widget.model.waveformParams.barSpacingScale.toDouble(),
+            min: 0,
+            max: 1,
+            value: widget.model.waveformParams.barSpacingScale,
             onChanged: (value) {
               widget.model.updateWaveformPainterParams(barSpacingScale: value);
               setState(() {});
@@ -47,7 +48,8 @@ class _WaveControlsState extends State<WaveControls> {
             max: 256,
             value: widget.model.waveformParams.chunkSize.toDouble(),
             onChanged: (value) {
-              widget.model.updateWaveformPainterParams(chunkSize: value.toInt());
+              widget.model
+                  .updateWaveformPainterParams(chunkSize: value.toInt());
               setState(() {});
             },
           ),

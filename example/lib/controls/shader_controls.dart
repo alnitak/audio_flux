@@ -4,8 +4,10 @@ import 'package:example/model/model.dart';
 import 'package:flutter/material.dart';
 
 class ShaderControls extends StatefulWidget {
-  const ShaderControls(
-      {super.key, required this.model});
+  const ShaderControls({
+    required this.model,
+    super.key,
+  });
   final AudioVisualizerModel model;
 
   @override
@@ -17,12 +19,11 @@ class _ShaderControlsState extends State<ShaderControls> {
   Widget build(BuildContext context) {
     final sp = widget.model.shaderParams;
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(sp.shaderName),
-
           for (var i = 0; i < (sp.params?.length ?? 0); i++)
             SliderParam(
               label: sp.params![i].label,
@@ -30,7 +31,7 @@ class _ShaderControlsState extends State<ShaderControls> {
               max: sp.params![i].max,
               value: sp.params![i].value,
               onChanged: (value) {
-                List<ShaderParam> newParams = List.from(sp.params!);
+                final newParams = List<ShaderParam>.from(sp.params!);
                 newParams[i] = newParams[i].copyWith(value: value);
                 widget.model.updateShaderParams(
                   params: newParams,
@@ -38,8 +39,7 @@ class _ShaderControlsState extends State<ShaderControls> {
                 setState(() {});
               },
             ),
-
-          for (var i=0; i<(sp.paramsRange?.length ?? 0); i++)
+          for (var i = 0; i < (sp.paramsRange?.length ?? 0); i++)
             RangeSliderParam(
               label: sp.paramsRange![i].label,
               min: sp.paramsRange![i].min,
@@ -49,7 +49,7 @@ class _ShaderControlsState extends State<ShaderControls> {
                 sp.paramsRange![i].maxValue,
               ),
               onChanged: (value) {
-                List<ShaderParamRange> newParams = List.from(sp.paramsRange!);
+                final newParams = List<ShaderParamRange>.from(sp.paramsRange!);
                 newParams[i] = newParams[i].copyWith(
                   minValue: value.start,
                   maxValue: value.end,

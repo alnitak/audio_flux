@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class FftControls extends StatefulWidget {
   const FftControls({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AudioVisualizerModel model;
@@ -18,13 +18,13 @@ class _FftControlsState extends State<FftControls> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           SliderParam(
             label: 'fftSmoothing',
-            min: 0.0,
-            max: 1.0,
+            min: 0,
+            max: 1,
             value: widget.model.fftParams.fftSmoothing,
             onChanged: (value) {
               widget.model.updateFftParams(fftSmoothing: value);

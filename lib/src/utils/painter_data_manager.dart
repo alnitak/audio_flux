@@ -1,6 +1,6 @@
 import 'dart:typed_data' show Float32List;
 
-/// Class to manage the data used by the painter.
+/// Class to manage the data used by the waveform and FFT painters.
 class PainterDataManager {
   /// The data used by the painter.
   Float32List _data = Float32List(0);

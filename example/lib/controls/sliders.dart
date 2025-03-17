@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class SliderParam extends StatefulWidget {
   const SliderParam({
-    super.key,
     required this.label,
     required this.min,
     required this.max,
     required this.value,
     required this.onChanged,
+    super.key,
   });
 
   final String label;
@@ -48,12 +48,12 @@ class _SliderParamState extends State<SliderParam> {
 
 class RangeSliderParam extends StatefulWidget {
   const RangeSliderParam({
-    super.key,
     required this.label,
     required this.min,
     required this.max,
     required this.values,
     required this.onChanged,
+    super.key,
   });
 
   final String label;
@@ -85,7 +85,10 @@ class _RangeSliderParamState extends State<RangeSliderParam> {
         ),
         SizedBox(
           width: 90,
-          child: Text('${widget.values.start.toStringAsFixed(2)} - ${widget.values.end.toStringAsFixed(2)}'),
+          child: Text(
+            '${widget.values.start.toStringAsFixed(2)} - '
+            '${widget.values.end.toStringAsFixed(2)}',
+          ),
         ),
       ],
     );

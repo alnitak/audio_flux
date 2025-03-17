@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class FftPainterControls extends StatefulWidget {
   const FftPainterControls({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AudioVisualizerModel model;
@@ -18,13 +18,13 @@ class _FftPainterControlsState extends State<FftPainterControls> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           SliderParam(
             label: 'barSpacingScale',
-            min: 0.0,
-            max: 1.0,
+            min: 0,
+            max: 1,
             value: widget.model.fftPainterParams.barSpacingScale,
             onChanged: (value) {
               widget.model.updateFftPainterParams(barSpacingScale: value);
@@ -33,7 +33,7 @@ class _FftPainterControlsState extends State<FftPainterControls> {
           ),
           SliderParam(
             label: 'shrinkTo',
-            min: -1.0,
+            min: -1,
             max: widget.model.fftParams.maxBinIndex.toDouble(),
             value: widget.model.fftPainterParams.shrinkTo.toDouble() - 1,
             onChanged: (value) {

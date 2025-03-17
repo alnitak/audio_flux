@@ -1,14 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:audio_flux/audio_flux.dart';
+// ignore_for_file: public_member_api_docs
 
+import 'package:audio_flux/audio_flux.dart';
+import 'package:flutter/material.dart';
+
+/// The model to manage `AudioFlux` parameters.
 class AudioVisualizerModel extends ChangeNotifier {
   FluxType fluxType = FluxType.fft;
   DataSources dataSource = DataSources.recorder;
-  ModelParams _modelParams = ModelParams();
+  ModelParams _modelParams = const ModelParams();
   FftParams _fftParams = const FftParams();
   FftPainterParams _fftPainterParams = const FftPainterParams();
   WaveformPainterParams _waveformPainterParams = const WaveformPainterParams();
-  ShaderParams _shaderParams = ShaderParams();
+  ShaderParams _shaderParams = const ShaderParams();
 
   ModelParams get modelParams => _modelParams;
   FftParams get fftParams => _fftParams;

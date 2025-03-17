@@ -1,17 +1,22 @@
 import 'dart:typed_data' show Float32List;
 
-import 'package:audio_flux/src/utils/model_params.dart';
-import 'package:flutter/material.dart';
 import 'package:audio_flux/src/audio_flux.dart';
+import 'package:audio_flux/src/params/model_params.dart';
+import 'package:flutter/material.dart';
 
+/// Widget to draw the FFT data.
 class Fft extends StatelessWidget {
+  /// Constructor.
   const Fft({
-    super.key,
     required this.dataCallback,
     required this.params,
+    super.key,
   });
 
+  /// The callback to get the FFT data.
   final DataCallback dataCallback;
+
+  /// The model parameters.
   final ModelParams params;
 
   @override
@@ -27,16 +32,35 @@ class Fft extends StatelessWidget {
   }
 }
 
-/// Custom painter to draw the wave data.
+/// Custom painter to draw the FFT data.
 class FftPainter extends CustomPainter {
+  ///
   FftPainter({
     required this.dataCallback,
     required this.params,
   });
 
+  /// The callback to get the FFT data.
   final DataCallback dataCallback;
+
+  /// The model parameters.
   final ModelParams params;
 
+  /// Process the wave data and store it in the buffer.
+  ///
+  /// This is an O(n) operation, where n is the length of the wave data.
+  ///
+  /// The buffer is divided into `barCount` chunks, and for each chunk the
+  /// average of the wave data is calculated and stored in the buffer.
+  ///
+  /// The average is calculated by summing all the values in the chunk and
+  /// dividing by the number of values in the chunk. If a chunk has no values
+  /// (i.e. the chunk size is 0), the average is set to 0.0.
+  ///
+  /// The boundaries of the chunk are calculated by multiplying the chunk count
+  /// by the chunk size and adding the `minBinIndex` and `maxBinIndex` to the
+  /// start and end of the chunk respectively. The clamp function is used to
+  /// ensure that the end index does not exceed the `maxBinIndex`.
   void processWaveData(Float32List currentWaveData) {
     final buffer = params.dataManager.data;
     final barCount = params.fftPainterParams.shrinkTo;
@@ -66,6 +90,7 @@ class FftPainter extends CustomPainter {
     }
   }
 
+  /// Calculates the number of bars to draw in the FFT visualizer.
   int _calculateEffectiveBarCount() {
     return params.fftParams.maxBinIndex - params.fftParams.minBinIndex + 1;
   }
@@ -76,7 +101,7 @@ class FftPainter extends CustomPainter {
 
     params.dataManager.ensureCapacity(effectiveBarCount);
 
-    var currentFftData = dataCallback();
+    final currentFftData = dataCallback();
     if (currentFftData.isNotEmpty) {
       processWaveData(currentFftData);
     }

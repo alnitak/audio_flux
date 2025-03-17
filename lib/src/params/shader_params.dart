@@ -1,5 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+/// Definition of shader parameters that can have a value in a range.
 class ShaderParam {
+  ///
   const ShaderParam({
     required this.label,
     required this.min,
@@ -7,11 +8,19 @@ class ShaderParam {
     required this.value,
   });
 
+  /// The parameter name
   final String label;
+
+  /// The minimum value
   final double min;
+
+  /// The maximum value
   final double max;
+
+  /// The current value
   final double value;
 
+  ///
   ShaderParam copyWith({
     String? label,
     double? min,
@@ -27,7 +36,13 @@ class ShaderParam {
   }
 }
 
+/// Definition of shader parameters that have a range of values that must
+/// be in a range of [min] and [max].
+///
+/// For example for a FFT bins data, the`minBinIndex` and `maxBinIndex` must
+/// be between 0 and 255.
 class ShaderParamRange {
+  ///
   const ShaderParamRange({
     required this.label,
     required this.min,
@@ -36,12 +51,22 @@ class ShaderParamRange {
     required this.maxValue,
   });
 
+  /// The parameter name
   final String label;
+
+  /// The minimum value
   final double min;
+
+  /// The maximum value
   final double max;
+
+  /// The minimum value
   final double minValue;
+
+  /// The maximum value
   final double maxValue;
 
+  ///
   ShaderParamRange copyWith({
     String? label,
     double? min,
@@ -59,7 +84,9 @@ class ShaderParamRange {
   }
 }
 
+/// Definition of shader parameters.
 class ShaderParams {
+  ///
   const ShaderParams({
     this.shaderName = '',
     this.shaderPath = '',
@@ -67,13 +94,19 @@ class ShaderParams {
     this.paramsRange,
   });
 
+  /// The shader name
   final String shaderName;
+
+  /// The shader path in the `assets` folder
   final String shaderPath;
 
+  /// The shader parameters
   final List<ShaderParam>? params;
+
+  /// The shader parameters that have a range
   final List<ShaderParamRange>? paramsRange;
 
-
+  ///
   ShaderParams copyWith({
     String? shaderName,
     String? shaderPath,

@@ -1,13 +1,13 @@
+import 'package:audio_flux/audio_flux.dart';
 import 'package:example/model/model.dart';
 import 'package:example/shaders/shaders.dart';
 import 'package:flutter/material.dart';
-import 'package:audio_flux/audio_flux.dart';
 
 class FluxTypeControls extends StatefulWidget {
   const FluxTypeControls({
-    super.key,
     required this.model,
     required this.onChanged,
+    super.key,
   });
 
   final AudioVisualizerModel model;
@@ -68,10 +68,10 @@ class _FluxTypeControlsState extends State<FluxTypeControls> {
 
 class FluxCheckBox extends StatelessWidget {
   const FluxCheckBox({
-    super.key,
     required this.label,
     required this.value,
     required this.onChanged,
+    super.key,
   });
 
   final String label;

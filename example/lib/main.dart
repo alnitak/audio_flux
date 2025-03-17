@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:developer' as dev;
 
 import 'package:audio_flux/audio_flux.dart';
@@ -25,7 +27,7 @@ void main() {
     );
   });
 
-  runApp(MainApp());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatefulWidget {
@@ -59,7 +61,7 @@ class _MainAppState extends State<MainApp> {
     }
 
     setupModel();
-    initSoLoud2();
+    initSoLoud('assets/audio/chunk_mfn.wav');
   }
 
   @override
@@ -69,19 +71,28 @@ class _MainAppState extends State<MainApp> {
   }
 
   void setupModel() {
-    /// set default maxBinIndex for fft to have a better visualization
-    model.updateFftParams(fftSmoothing: 0.92, maxBinIndex: 180);
-    model.updateDataSource(source: DataSources.soloud);
-    model.updateFluxType(type: FluxType.shader);
-    model.updateShaderParams(
-      shaderName: Shaders.shaderParams[8].shaderName,
-      shaderPath: Shaders.shaderParams[8].shaderPath,
-      params: Shaders.shaderParams[8].params,
-      paramsRange: Shaders.shaderParams[8].paramsRange,
-    );
+    /// setup the default parameters
+    model
 
-    /// set default gradients
-    model.updateModelParams(
+      /// set default maxBinIndex for fft to have a better visualization
+      ..updateFftParams(fftSmoothing: 0.92, maxBinIndex: 180)
+
+      /// use flutter_soloud as the audio source
+      ..updateDataSource(source: DataSources.soloud)
+
+      /// use shader
+      ..updateFluxType(type: FluxType.shader)
+
+      /// use the 8th shader in the [Shaders] list
+      ..updateShaderParams(
+        shaderName: Shaders.shaderParams[8].shaderName,
+        shaderPath: Shaders.shaderParams[8].shaderPath,
+        params: Shaders.shaderParams[8].params,
+        paramsRange: Shaders.shaderParams[8].paramsRange,
+      )
+
+      /// set default gradients
+      ..updateModelParams(
         backgroundGradient: const LinearGradient(
           colors: [
             Color.fromARGB(255, 7, 28, 148),
@@ -117,7 +128,8 @@ class _MainAppState extends State<MainApp> {
                 stops: [0, 0.6, 1.0],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-              ));
+              ),
+      );
   }
 
   @override
@@ -127,7 +139,7 @@ class _MainAppState extends State<MainApp> {
     super.dispose();
   }
 
-  Future<void> initSoLoud() async {
+  Future<void> initSoLoud(String audioAsset) async {
     try {
       recorder.deinit();
       await soloud.init(bufferSize: 1024, channels: Channels.mono);
@@ -135,41 +147,9 @@ class _MainAppState extends State<MainApp> {
 
       await soloud.play(
         await soloud.loadAsset(
-          'assets/audio/ElectroNebulae.mp3',
+          audioAsset,
           mode: LoadMode.disk,
         ),
-        looping: true,
-      );
-    } on Exception catch (e) {
-      debugPrint(e.toString());
-    }
-
-    model.updateDataSource(source: DataSources.soloud);
-  }
-
-  Future<void> initSoLoud2() async {
-    try {
-      recorder.deinit();
-      await soloud.init(bufferSize: 1024, channels: Channels.mono);
-      soloud.setVisualizationEnabled(true);
-      await soloud.play(
-        await soloud.loadAsset('assets/audio/chunk_mfn.wav'),
-        looping: true,
-      );
-    } on Exception catch (e) {
-      debugPrint(e.toString());
-    }
-
-    model.updateDataSource(source: DataSources.soloud);
-  }
-
-  Future<void> initSoLoud3() async {
-    try {
-      recorder.deinit();
-      await soloud.init(bufferSize: 1024, channels: Channels.mono);
-      soloud.setVisualizationEnabled(true);
-      await soloud.play(
-        await soloud.loadAsset('assets/audio/audiocheck.wav'),
         looping: true,
       );
     } on Exception catch (e) {
@@ -187,7 +167,6 @@ class _MainAppState extends State<MainApp> {
       await recorder.init(
         sampleRate: 44100,
         format: PCMFormat.f32le,
-        channels: RecorderChannels.mono,
       );
       recorder.start();
     } on Exception catch (e) {
@@ -208,16 +187,16 @@ class _MainAppState extends State<MainApp> {
         ).copyWith(surface: const Color.fromARGB(255, 0, 30, 0)),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.black,
-          constraints: BoxConstraints(maxWidth: double.infinity),
+          constraints: BoxConstraints(),
         ),
       ),
       home: MediaQuery(
-        data:
-            MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(0.9)),
+        data: MediaQuery.of(context)
+            .copyWith(textScaler: const TextScaler.linear(0.9)),
         child: SafeArea(
           child: Scaffold(
             bottomSheet: Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(4),
               child: Controls(model: model),
             ),
             body: Align(
@@ -231,27 +210,27 @@ class _MainAppState extends State<MainApp> {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          await initSoLoud();
+                          await initSoLoud('assets/audio/ElectroNebulae.mp3');
                         },
-                        child: Text('electro'),
+                        child: const Text('electro'),
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          await initSoLoud2();
+                          await initSoLoud('assets/audio/chunk_mfn.wav');
                         },
-                        child: Text('song'),
+                        child: const Text('song'),
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          await initSoLoud3();
+                          await initSoLoud('assets/audio/audiocheck.wav');
                         },
-                        child: Text('sweep'),
+                        child: const Text('sweep'),
                       ),
                       ElevatedButton(
                         onPressed: () async {
                           await initRecorder();
                         },
-                        child: Text('recorder'),
+                        child: const Text('recorder'),
                       ),
                     ],
                   ),

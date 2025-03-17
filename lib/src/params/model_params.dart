@@ -1,91 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/material.dart';
-
 import 'package:audio_flux/audio_flux.dart';
 import 'package:audio_flux/src/utils/painter_data_manager.dart';
-import 'package:audio_flux/src/utils/shader_params.dart';
+import 'package:flutter/material.dart';
 
-class FftParams {
-  const FftParams({
-    this.minBinIndex = 0,
-    this.maxBinIndex = 255,
-    this.fftSmoothing = 0.93,
-  }) : assert(
-          minBinIndex >= 0 && maxBinIndex <= 255 && minBinIndex <= maxBinIndex,
-          'minBinIndex and maxIndex must be between 0 and 255 and '
-          'minBinIndex must be <= maxIndex',
-        );
-
-  final int minBinIndex;
-  final int maxBinIndex;
-  final double fftSmoothing;
-
-  FftParams copyWith({
-    int? minBinIndex,
-    int? maxBinIndex,
-    double? fftSmoothing,
-  }) {
-    return FftParams(
-      minBinIndex: minBinIndex ?? this.minBinIndex,
-      maxBinIndex: maxBinIndex ?? this.maxBinIndex,
-      fftSmoothing: fftSmoothing ?? this.fftSmoothing,
-    );
-  }
-}
-
-class FftPainterParams {
-  const FftPainterParams({
-    this.shrinkTo = 256,
-    this.barSpacingScale = 0,
-  });
-
-  final int shrinkTo;
-  final double barSpacingScale;
-
-  FftPainterParams copyWith({
-    int? shrinkTo,
-    double? barSpacingScale,
-  }) {
-    return FftPainterParams(
-      shrinkTo: shrinkTo ?? this.shrinkTo,
-      barSpacingScale: barSpacingScale ?? this.barSpacingScale,
-    );
-  }
-}
-
-class WaveformPainterParams {
-  const WaveformPainterParams({
-    this.barsWidth = 1,
-    this.barSpacingScale = 0,
-    this.chunkSize = 256,
-  }) : assert(chunkSize > 0 && chunkSize <= 256,
-            'chunkSize must be between 1 and 256');
-
-  /// The size of a bar in pixels.
-  final int barsWidth;
-
-  /// The size of spacing between bars in pixels.
-  final double barSpacingScale;
-
-  /// The number of new data to average and add to the waveform.
-  /// The higher the number, the slower the waveform is moving.
-  /// This should be >= 1 and <= 256.
-  final int chunkSize;
-
-  WaveformPainterParams copyWith({
-    int? barsWidth,
-    double? barSpacingScale,
-    int? chunkSize,
-  }) {
-    return WaveformPainterParams(
-      barsWidth: barsWidth ?? this.barsWidth,
-      barSpacingScale: barSpacingScale ?? this.barSpacingScale,
-      chunkSize: chunkSize ?? this.chunkSize,
-    );
-  }
-}
-
+/// The parameters used to configure the AudioFlux widget.
 class ModelParams {
+  ///
   const ModelParams({
     this.backgroundColor = Colors.black,
     this.backgroundGradient,
@@ -137,6 +56,7 @@ class ModelParams {
   /// The parameters for the shader.
   final ShaderParams shaderParams;
 
+  ///
   ModelParams copyWith({
     Color? backgroundColor,
     Color? barColor,

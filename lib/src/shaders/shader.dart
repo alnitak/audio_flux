@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_string_interpolations
-
 import 'dart:async' show Completer;
 import 'dart:typed_data' show Uint8List;
 import 'dart:ui' as ui;
@@ -11,16 +9,24 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_soloud/flutter_soloud.dart' show AudioData;
 import 'package:shader_buffers/shader_buffers.dart';
 
+/// The shader widget which paints a given custom shader.
+/// It will look at the `params.shaderParams` to get the [ShaderParams].
 class Shader extends StatefulWidget {
+  ///
   const Shader({
-    super.key,
     required this.dataCallback,
     required this.audioData,
     required this.params,
+    super.key,
   });
 
+  /// The callback to get the wave and FFT data.
   final DataCallback dataCallback;
+
+  /// The audio data.
   final AudioData? audioData;
+
+  /// The model parameters.
   final ModelParams params;
 
   @override
@@ -42,8 +48,7 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     super.initState();
 
     cols = (widget.params.fftParams.maxBinIndex -
-                widget.params.fftParams.minBinIndex)
-            .toInt() +
+            widget.params.fftParams.minBinIndex) +
         1;
     linearData = Bmp32Header.setHeader(cols, 2);
 
@@ -60,12 +65,12 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     buildImageForLinear();
   }
 
+  /// Use to chatch changes in dependencies usually triggered by a reload.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     cols = (widget.params.fftParams.maxBinIndex -
-                widget.params.fftParams.minBinIndex)
-            .toInt() +
+            widget.params.fftParams.minBinIndex) +
         1;
   }
 
@@ -75,14 +80,18 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  /// Create the texture to pass to the shader. The texture is a matrix of 256x2
+  /// RGBA pixels representing:
+  /// in the 1st row the frequencies data
+  /// in the 2nd row the wave data
   Uint8List createBmpFromAudioData() {
     widget.audioData?.updateSamples();
-    var data = widget.dataCallback();
+    final data = widget.dataCallback();
     if (data.length < 512) return Uint8List(0);
 
-    final int maxBinIndex = widget.params.fftParams.maxBinIndex.toInt();
-    final int minBinIndex = widget.params.fftParams.minBinIndex.toInt();
-    final int newCols = maxBinIndex - minBinIndex + 1;
+    final maxBinIndex = widget.params.fftParams.maxBinIndex;
+    final minBinIndex = widget.params.fftParams.minBinIndex;
+    final newCols = maxBinIndex - minBinIndex + 1;
     if (newCols != cols) {
       cols = newCols;
       linearData = Bmp32Header.setHeader(cols, 2);
@@ -125,6 +134,7 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
 
     ui.decodeImageFromList(data, completer.complete);
 
+    /// Create the iChannel if not already
     final ret = await completer.future;
     if (iChannel == null) {
       iChannel = IChannel(texture: ret);
@@ -132,17 +142,21 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     } else {
       iChannel!.updateTexture(ret);
     }
-    List<Uniform> uniforms = [];
+
+    /// add the uniforms
+    final uniforms = <Uniform>[];
     for (var i = 0; i < (widget.params.shaderParams.params?.length ?? 0); i++) {
-      uniforms.add(Uniform(
-        name: widget.params.shaderParams.params![i].label,
-        value: widget.params.shaderParams.params![i].value,
-        defaultValue: widget.params.shaderParams.params![i].value,
-        range: RangeValues(
-          widget.params.shaderParams.params![i].min,
-          widget.params.shaderParams.params![i].max,
+      uniforms.add(
+        Uniform(
+          name: widget.params.shaderParams.params![i].label,
+          value: widget.params.shaderParams.params![i].value,
+          defaultValue: widget.params.shaderParams.params![i].value,
+          range: RangeValues(
+            widget.params.shaderParams.params![i].min,
+            widget.params.shaderParams.params![i].max,
+          ),
         ),
-      ));
+      );
     }
     mainImage!.uniforms = Uniforms(uniforms);
 
@@ -151,7 +165,7 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (mainImage == null) return SizedBox.shrink();
+    if (mainImage == null) return const SizedBox.shrink();
 
     /// The shader path has changed
     if (currentShaderPath != widget.params.shaderParams.shaderPath) {
@@ -165,11 +179,12 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     }
 
     return ShaderBuffers(
-        key: ValueKey(currentShaderPath),
-        mainImage: mainImage!,
-        controller: shaderController,
-        onShaderLoaded: (isLoaded) {
-          if (isLoaded && !ticker.isActive) ticker.start();
-        });
+      key: ValueKey(currentShaderPath),
+      mainImage: mainImage!,
+      controller: shaderController,
+      onShaderLoaded: (isLoaded) {
+        if (isLoaded && !ticker.isActive) ticker.start();
+      },
+    );
   }
 }

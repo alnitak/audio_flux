@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 
 class Controls extends StatefulWidget {
   const Controls({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AudioVisualizerModel model;
@@ -25,7 +25,7 @@ class _ControlsState extends State<Controls> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.sizeOf(context).height -450,
+        maxHeight: MediaQuery.sizeOf(context).height - 450,
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -39,26 +39,27 @@ class _ControlsState extends State<Controls> {
             if (widget.model.fluxType == FluxType.fft ||
                 widget.model.fluxType == FluxType.shader)
               ColoredBox(
-                color: Color.fromARGB(255, 50, 20, 20),
+                color: const Color.fromARGB(255, 50, 20, 20),
                 child: FftControls(model: widget.model),
               ),
             if (widget.model.fluxType == FluxType.fft)
               ColoredBox(
-                color: Color.fromARGB(255, 20, 20, 40),
+                color: const Color.fromARGB(255, 20, 20, 40),
                 child: ListenableBuilder(
-                    listenable: widget.model,
-                    builder: (BuildContext context, Widget? child) {
-                      return FftPainterControls(model: widget.model);
-                    }),
+                  listenable: widget.model,
+                  builder: (BuildContext context, Widget? child) {
+                    return FftPainterControls(model: widget.model);
+                  },
+                ),
               ),
             if (widget.model.fluxType == FluxType.waveform)
               ColoredBox(
-                color: Color.fromARGB(255, 20, 40, 20),
+                color: const Color.fromARGB(255, 20, 40, 20),
                 child: WaveControls(model: widget.model),
               ),
             if (widget.model.fluxType == FluxType.shader)
               ColoredBox(
-                color: Color.fromARGB(255, 40, 40, 20),
+                color: const Color.fromARGB(255, 40, 40, 20),
                 child: ShaderControls(model: widget.model),
               ),
           ],
