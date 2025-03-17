@@ -3,6 +3,7 @@ import 'dart:developer' as dev;
 import 'package:audio_flux/audio_flux.dart';
 import 'package:example/controls/controls.dart';
 import 'package:example/model/model.dart';
+import 'package:example/shaders/shaders.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
@@ -47,7 +48,7 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-    
+
     if (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS) {
       Permission.microphone.request().isGranted.then((value) async {
@@ -57,17 +58,29 @@ class _MainAppState extends State<MainApp> {
       });
     }
 
-    setupGradients();
-    initSoLoud();
+    setupModel();
+    initSoLoud2();
   }
 
   @override
   void reassemble() {
     super.reassemble();
-    setupGradients();
+    setupModel();
   }
 
-  void setupGradients() {
+  void setupModel() {
+    /// set default maxBinIndex for fft to have a better visualization
+    model.updateFftParams(fftSmoothing: 0.92, maxBinIndex: 180);
+    model.updateDataSource(source: DataSources.soloud);
+    model.updateFluxType(type: FluxType.shader);
+    model.updateShaderParams(
+      shaderName: Shaders.shaderParams[8].shaderName,
+      shaderPath: Shaders.shaderParams[8].shaderPath,
+      params: Shaders.shaderParams[8].params,
+      paramsRange: Shaders.shaderParams[8].paramsRange,
+    );
+
+    /// set default gradients
     model.updateModelParams(
         backgroundGradient: const LinearGradient(
           colors: [
@@ -117,10 +130,14 @@ class _MainAppState extends State<MainApp> {
   Future<void> initSoLoud() async {
     try {
       recorder.deinit();
-      await soloud.init(bufferSize: 2048);
+      await soloud.init(bufferSize: 1024, channels: Channels.mono);
       soloud.setVisualizationEnabled(true);
+
       await soloud.play(
-        await soloud.loadAsset('assets/audio/ElectroNebulae.mp3'),
+        await soloud.loadAsset(
+          'assets/audio/ElectroNebulae.mp3',
+          mode: LoadMode.disk,
+        ),
         looping: true,
       );
     } on Exception catch (e) {
@@ -133,7 +150,23 @@ class _MainAppState extends State<MainApp> {
   Future<void> initSoLoud2() async {
     try {
       recorder.deinit();
-      await soloud.init(bufferSize: 2048);
+      await soloud.init(bufferSize: 1024, channels: Channels.mono);
+      soloud.setVisualizationEnabled(true);
+      await soloud.play(
+        await soloud.loadAsset('assets/audio/chunk_mfn.wav'),
+        looping: true,
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+
+    model.updateDataSource(source: DataSources.soloud);
+  }
+
+  Future<void> initSoLoud3() async {
+    try {
+      recorder.deinit();
+      await soloud.init(bufferSize: 1024, channels: Channels.mono);
       soloud.setVisualizationEnabled(true);
       await soloud.play(
         await soloud.loadAsset('assets/audio/audiocheck.wav'),
@@ -178,8 +211,9 @@ class _MainAppState extends State<MainApp> {
           constraints: BoxConstraints(maxWidth: double.infinity),
         ),
       ),
-      home: MediaQuery( 
-          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(0.9)),
+      home: MediaQuery(
+        data:
+            MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(0.9)),
         child: SafeArea(
           child: Scaffold(
             bottomSheet: Padding(
@@ -199,13 +233,19 @@ class _MainAppState extends State<MainApp> {
                         onPressed: () async {
                           await initSoLoud();
                         },
-                        child: Text('song'),
+                        child: Text('electro'),
                       ),
                       ElevatedButton(
                         onPressed: () async {
                           await initSoLoud2();
                         },
-                        child: Text('audio sweep'),
+                        child: Text('song'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await initSoLoud3();
+                        },
+                        child: Text('sweep'),
                       ),
                       ElevatedButton(
                         onPressed: () async {

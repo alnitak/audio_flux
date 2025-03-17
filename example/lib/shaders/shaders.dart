@@ -98,5 +98,13 @@ class Shaders {
       params: [],
       paramsRange: [],
     ),
+
+    /// Dancing Flutter
+    ShaderParams(
+      shaderName: 'Dancing Flutter',
+      shaderPath: 'assets/shaders/dancing_flutter.frag',
+      params: [],
+      paramsRange: [],
+    ),
   ];
 }
