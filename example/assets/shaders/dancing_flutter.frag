@@ -319,11 +319,11 @@ vec4 scene(vec3 p) {
   vec4 plane = vec4(sdPlane(p), MAT_4);
   
   vec3 p1 = rotate(
-      vec3(p.x*fftHigh*2., p.y, p.z), 
+      vec3(p.x*fftHigh, p.y, p.z), 
       vec3(0., 1., 0.),
       0.
       )
-      + vec3(2., sin(fftLow*4.) - .7, -1.);
+      + vec3(2., sin(fftLow) - .7, -1.);
   vec4 flutter = flutterLogo(p1);
   
   
@@ -369,14 +369,14 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
   vec2 uv = (fragCoord-.5*iResolution.xy)/(iResolution.y*-1.);
   vec2 mouseUV = iMouse.xy/iResolution.xy;
   
-  for (float x=0.; x<0.2; x+=0.01)
+  for (float x=0.; x<0.1; x+=0.01)
       fftLow += texture( iChannel0, vec2(x,0.25) ).x;
-  fftLow /= 20.;
+  fftLow /= 10.;
   
-  for (float x=0.2; x<0.6; x+=0.01)
+  for (float x=0.1; x<0.8; x+=0.01)
       fftHigh += texture( iChannel0, vec2(x,0.25) ).x;
-  fftHigh /= 40.;
-  if (fftHigh < .35) fftHigh = .35;
+  fftHigh /= 70.;
+  fftHigh = 1. - clamp(fftHigh, 0., .5);
   
   if (mouseUV == vec2(0.0)) 
       mouseUV = vec2(0.0, 0.0); // trick to center mouse on page load

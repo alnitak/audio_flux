@@ -80,17 +80,19 @@ packages:
   flutter_recorder:
     dependency: "direct main"
     description:
-      path: "../../flutter_recorder"
-      relative: true
-    source: path
-    version: "1.0.4"
+      name: flutter_recorder
+      sha256: "43e163e4f3a006036e37d37aa98a1255d7beb090bcd3c03f68b8d19201313185"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   flutter_soloud:
     dependency: "direct main"
     description:
-      path: "../../flutter_soloud"
-      relative: true
-    source: path
-    version: "3.0.1"
+      name: flutter_soloud
+      sha256: "1d10619ce145d42c6e8819a8f9ea7ffe05d1f739cc481e0353a2c83efa9b4b92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter

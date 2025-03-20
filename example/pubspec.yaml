@@ -1,5 +1,5 @@
 name: example
-description: "A new Flutter project."
+description: "Audio Flux example."
 publish_to: 'none'
 version: 0.1.2
 
@@ -10,10 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_recorder:
-    path: ../../flutter_recorder
-  flutter_soloud:
-    path: ../../flutter_soloud
+  flutter_recorder: ^1.1.0
+    # path: ../flutter_recorder
+  flutter_soloud: ^3.1.0
+    # path: ../flutter_soloud
   audio_flux:
     path: ../
 
