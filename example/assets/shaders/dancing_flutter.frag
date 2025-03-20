@@ -386,7 +386,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
   vec3 ro = vec3(1, -1.5, 1); // ray origin that represents camera position
   
   float cameraRadius = 4.;
-  ro.yz = ro.yz * cameraRadius * rotate2d(mix(-PI/2., PI/2., mouseUV.y));
+  ro.yz = ro.yz * cameraRadius * rotate2d(mix(-PI/2., PI/2., clamp(mouseUV.y, 0., .15)));
   ro.xz = ro.xz * rotate2d(mix(-PI, PI, mouseUV.x)) + vec2(lp.x, lp.z);
 
   vec3 rd = camera(ro, lp) * normalize(vec3(uv, -1)); // ray direction
