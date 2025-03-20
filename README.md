@@ -1,5 +1,9 @@
 Audio visualizer which uses [flutter_soloud](https://pub.dev/packages/flutter_soloud) and [flutter_recorder](https://pub.dev/packages/flutter_recorder) to acquire the audio data and display them using a CustomPainter or [shader_buffer](https://pub.dev/packages/shader_buffers) to render them to shaders.
 
+||||
+|-|-|-|
+|![custom_painter](https://github.com/user-attachments/assets/59471aa9-1f53-4920-90cc-7793e17b9eec)|![Dancing Flutter](https://github.com/user-attachments/assets/5e35069f-4dc3-4f49-97b5-0d75bcaaaa74)|![shaders](https://github.com/user-attachments/assets/d69e14f2-23af-4912-8c28-071bdf1d8c62)|
+
 ## Getting started
 
 Since this package uses [flutter_soloud](https://pub.dev/packages/flutter_soloud) and [flutter_recorder](https://pub.dev/packages/flutter_recorder), you need to add them to your pubspec.yaml file:
@@ -11,7 +15,7 @@ dependencies:
     flutter_soloud: any
     flutter_recorder: any
 ```
-this lets you start, stop, play sound etc and visualize the audio.
+this lets you start, stop, play sound, etc, and visualize the audio.
 
 Please refer to the [flutter_soloud](https://pub.dev/packages/flutter_soloud) and [flutter_recorder](https://pub.dev/packages/flutter_recorder) packages for more information like adding recording permission or support for the web.
 
@@ -34,9 +38,9 @@ where:
 - **`dataSource`** is the enum to choose from the different data sources:
     - `DataSource.soloud` uses flutter_soloud to acquire the audio data
     - `DataSource.recorder` uses flutter_recorder to acquire the audio data
-- **`modelParams`** is the map of common parameters and parameters for the choosen `fluxType`. See the [documentation](https://github.com/alnitak/audio_flux/blob/ca016844cbc5dc33b64b044c6985b2594d7014e8/lib/src/params/model_params.dart) for more details.
+- **`modelParams`** is the map of common parameters and parameters for the chosen `fluxType`. See the [documentation](https://github.com/alnitak/audio_flux/blob/ca016844cbc5dc33b64b044c6985b2594d7014e8/lib/src/params/model_params.dart) for more details.
 
-**To know better how `modelParams` parameters work all togheter, please run the provided example or go [here](https://marcobavagnoli.com/audio_flux/) for a web demo.**
+**To know better how `modelParams` parameters work altogether, please run the provided example or go [here](https://marcobavagnoli.com/audio_flux/) for a web demo.**
 
 The shaders in the example, but the `Dancing Flutter` which I made for fun, are from [Shadertoy](https://www.shadertoy.com/).
 
@@ -75,7 +79,7 @@ AudioFlux(
 
 ## Adding a shader to your app
 
-To add a shader to your app, you need to add the shader code to your assets, add it to your pubspec.yaml and provide the path to the shader in the `modelParams` map:
+To add a shader to your app, you need to add the shader code to your assets, add it to your pubspec.yaml, and provide the path to the shader in the `modelParams` map:
 
 ```yaml
 flutter:
@@ -107,7 +111,7 @@ In the `example/assets/shaders/common` folder you can find the `common_header.fr
 // - [iResolution] the widget width and height
 // - [iTime] the current time in seconds from the start of rendering
 // - [iFrame] the current rendering frame number
-// - [iMouse] for user interaction with pointer (see https://github.com/alnitak/shader_buffers/blob/main/lib/src/imouse.dart)
+// - [iMouse] for user interaction with the pointer (see https://github.com/alnitak/shader_buffers/blob/main/lib/src/imouse.dart)
 // and the output variable `fragColor`
 #include <common/common_header.frag>
 
@@ -117,7 +121,7 @@ In the `example/assets/shaders/common` folder you can find the `common_header.fr
 // in the 2nd row the amplitudes data
 uniform sampler2D iChannel0;
 
-// Other uniforms if your want to add custom parameters and control them from Dart
+// Other uniforms if you want to add custom parameters and control them from Dart
 uniform float customUniform;
 
 // The shader code.
