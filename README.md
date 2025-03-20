@@ -3,6 +3,7 @@ Audio visualizer which uses [flutter_soloud](https://pub.dev/packages/flutter_so
 ||||
 |-|-|-|
 |![custom_painter](https://github.com/user-attachments/assets/59471aa9-1f53-4920-90cc-7793e17b9eec)|![Dancing Flutter](https://github.com/user-attachments/assets/5e35069f-4dc3-4f49-97b5-0d75bcaaaa74)|![shaders](https://github.com/user-attachments/assets/d69e14f2-23af-4912-8c28-071bdf1d8c62)|
+[web demo](https://marcobavagnoli.com/audio_flux/)
 
 ## Getting started
 
