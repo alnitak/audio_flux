@@ -4,7 +4,6 @@ import 'package:audio_flux/audio_flux.dart';
 class Shaders {
   // ignore: public_member_api_docs
   static const List<ShaderParams> shaderParams = [
-    
     /// 2D LED Spectrum
     ShaderParams(
       shaderName: '2D LED Spectrum',

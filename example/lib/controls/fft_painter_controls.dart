@@ -42,7 +42,8 @@ class _FftPainterControlsState extends State<FftPainterControls> {
                   widget.model.fftParams.maxBinIndex -
                       widget.model.fftParams.minBinIndex) {
                 value = widget.model.fftParams.maxBinIndex -
-                      widget.model.fftParams.minBinIndex +1;
+                    widget.model.fftParams.minBinIndex +
+                    1;
               }
               widget.model.updateFftPainterParams(shrinkTo: value.toInt());
               setState(() {});

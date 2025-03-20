@@ -57,6 +57,7 @@ class AudioVisualizerModel extends ChangeNotifier {
       fftSmoothing: fftSmoothing,
     );
     _modelParams = _modelParams.copyWith(fftParams: _fftParams);
+
     /// Fix the [_fftParams.shrinkTo] value
     if (_fftPainterParams.shrinkTo >
         _fftParams.maxBinIndex - _fftParams.minBinIndex + 1) {

@@ -37,16 +37,16 @@ enum FluxType {
 typedef DataCallback = Float32List Function({bool alwaysReturnData});
 
 /// The main widget which visualizes the audio data.
-/// 
+///
 /// It can render the waveform, the FFT, or a shader. The waveform and the FFT
 /// are implemented as CustomPainters. While the shader is implemented using
 /// [shader_buffers](https://pub.dev/packages/shader_buffers) package.
-/// 
+///
 /// The audio data can be acquired from flutter_soloud or flutter_recorder
 /// using the [DataSources] enum.
-/// 
+///
 /// The visualizer kind can be set using the [FluxType] enum.
-/// 
+///
 /// The parameters for the waveform, the FFT, or the shader can be set
 /// using the [ModelParams] class.
 class AudioFlux extends StatefulWidget {
@@ -92,13 +92,10 @@ class _AudioFluxState extends State<AudioFlux> {
         audioData = AudioData(GetSamplesKind.wave);
         dataCallback = ({bool alwaysReturnData = false}) =>
             audioData!.getAudioData(alwaysReturnData: alwaysReturnData);
-        break;
       case DataSources.recorder:
         audioData?.dispose();
         audioData = null;
-        dataCallback = ({bool alwaysReturnData = false}) =>
-            Recorder.instance.getWave(alwaysReturnData: alwaysReturnData);
-        break;
+        dataCallback = Recorder.instance.getWave;
     }
   }
 

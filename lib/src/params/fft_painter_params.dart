@@ -13,7 +13,7 @@ class FftPainterParams {
   /// Bar spacing scale
   final double barSpacingScale;
 
-  /// 
+  ///
   FftPainterParams copyWith({
     int? shrinkTo,
     double? barSpacingScale,
