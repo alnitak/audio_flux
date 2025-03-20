@@ -1,4 +1,4 @@
-Audio visualizer which uses [flutter_soloud](https://pub.dev/packages/flutter_soloud) and [flutter_recorder](https://pub.dev/packages/flutter_recorder) to acquire the audio data and display them using a CustomPainter or [shader_buffer](https://pub.dev/packages/shader_buffers) to render them to shaders.
+A versatile audio visualization package for Flutter that captures and displays real-time audio data. Using [flutter_soloud](https://pub.dev/packages/flutter_soloud) for playback and [flutter_recorder](https://pub.dev/packages/flutter_recorder) for recording, it offers both traditional CustomPainter rendering and high-performance shader-based visualizations through [shader_buffer](https://pub.dev/packages/shader_buffers).
 
 ||||
 |-|-|-|
@@ -7,7 +7,11 @@ Audio visualizer which uses [flutter_soloud](https://pub.dev/packages/flutter_so
 
 ## Getting started
 
-Since this package uses [flutter_soloud](https://pub.dev/packages/flutter_soloud) and [flutter_recorder](https://pub.dev/packages/flutter_recorder), you need to add them to your pubspec.yaml file:
+This package requires two main dependencies to handle audio processing:
+- [flutter_soloud](https://pub.dev/packages/flutter_soloud): Handles audio playback and analysis
+- [flutter_recorder](https://pub.dev/packages/flutter_recorder): Manages audio input capture
+
+Add these to your pubspec.yaml:
 
 ```yaml
 dependencies:
@@ -16,12 +20,13 @@ dependencies:
     flutter_soloud: any
     flutter_recorder: any
 ```
-this lets you start, stop, play sound, etc, and visualize the audio.
+These dependencies provide comprehensive audio functionality, enabling playback control, recording, and real-time audio visualization.
 
-Please refer to the [flutter_soloud](https://pub.dev/packages/flutter_soloud) and [flutter_recorder](https://pub.dev/packages/flutter_recorder) packages for more information like adding recording permission or support for the web.
-
+Before using the package, ensure you've configured the necessary platform-specific settings and permissions as described in the documentation of each dependency.
 
 ## Usage
+
+AudioFlux provides three powerful visualization modes through a simple, configurable widget:
 
 ```dart
 AudioFlux(
@@ -32,18 +37,18 @@ AudioFlux(
 ```
 
 where:
-- **`fluxType`** is the enum to choose from the different visualizers:
-    - `FluxType.waveform` visualizes the waveform
-    - `FluxType.fft` visualizes the FFT
-    - `FluxType.shader` visualizes a shader
-- **`dataSource`** is the enum to choose from the different data sources:
-    - `DataSource.soloud` uses flutter_soloud to acquire the audio data
-    - `DataSource.recorder` uses flutter_recorder to acquire the audio data
-- **`modelParams`** is the map of common parameters and parameters for the chosen `fluxType`. See the [documentation](https://github.com/alnitak/audio_flux/blob/ca016844cbc5dc33b64b044c6985b2594d7014e8/lib/src/params/model_params.dart) for more details.
+- **`fluxType`**: Select your visualization style:
+    - `FluxType.waveform`: Real-time oscilloscope-style display of audio waves
+    - `FluxType.fft`: Frequency spectrum analysis visualization
+    - `FluxType.shader`: Custom GPU-accelerated visual effects
+- **`dataSource`**: Choose your audio source:
+    - `DataSource.soloud`: Captures audio from playback stream
+    - `DataSource.recorder`: Captures audio from microphone/input
+- **`modelParams`**: Configure visualization behavior with type-specific parameters
 
-**To know better how `modelParams` parameters work altogether, please run the provided example or go [here](https://marcobavagnoli.com/audio_flux/) for a web demo.**
+**Explore the interactive [web demo](https://marcobavagnoli.com/audio_flux/) to see how different parameters affect the visualizations in real-time.**
 
-The shaders in the example, but the `Dancing Flutter` which I made for fun, are from [Shadertoy](https://www.shadertoy.com/).
+Note: All shader examples except 'Dancing Flutter' are adapted from [Shadertoy](https://www.shadertoy.com/).
 
 #### Waveform visualization
 
@@ -77,10 +82,12 @@ AudioFlux(
 )
 ```
 
-
 ## Adding a shader to your app
 
-To add a shader to your app, you need to add the shader code to your assets, add it to your pubspec.yaml, and provide the path to the shader in the `modelParams` map:
+To implement shader-based visualizations, follow these steps:
+1. Add your shader file to the assets directory
+2. Register it in pubspec.yaml
+3. Configure AudioFlux to use your shader
 
 ```yaml
 flutter:
@@ -103,7 +110,13 @@ AudioFlux(
 )
 ```
 
-#### write a shader
+#### Creating custom shaders
+
+The `common_header.frag` file provides essential uniforms for shader development:
+- `iResolution`: Current widget dimensions (vec2)
+- `iTime`: Elapsed time in seconds (float)
+- `iFrame`: Current frame number (int)
+- `iMouse`: Pointer interaction data (vec4)
 
 In the `example/assets/shaders/common` folder you can find the `common_header.frag` file which contains the common code for all the shaders used by the *shader_buffer* package. Include that file in your shader and add your custom code:
 
