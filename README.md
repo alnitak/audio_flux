@@ -8,7 +8,7 @@ A versatile audio visualization package for Flutter that captures and displays r
 ## Getting started
 
 This package requires two main dependencies to handle audio processing:
-- [flutter_soloud](https://pub.dev/packages/flutter_soloud): Handles audio playback and analysis
+- [flutter_soloud](https://pub.dev/packages/flutter_soloud): Handles audio playback
 - [flutter_recorder](https://pub.dev/packages/flutter_recorder): Manages audio input capture
 
 Add these to your pubspec.yaml:
@@ -48,7 +48,10 @@ where:
 
 **Explore the interactive [web demo](https://marcobavagnoli.com/audio_flux/) to see how different parameters affect the visualizations in real-time.**
 
-Note: All shader examples except 'Dancing Flutter' are adapted from [Shadertoy](https://www.shadertoy.com/).
+**Note**: All shader examples except 'Dancing Flutter' are adapted from [Shadertoy](https://www.shadertoy.com/).
+
+> [!TIP]  
+> When starting to play something or initializing the recorder, the audio flux widget will automatically start capturing audio data and updating the visualization.
 
 #### Waveform visualization
 
@@ -116,20 +119,16 @@ The `common_header.frag` file provides essential uniforms for shader development
 - `iResolution`: Current widget dimensions (vec2)
 - `iTime`: Elapsed time in seconds (float)
 - `iFrame`: Current frame number (int)
-- `iMouse`: Pointer interaction data (vec4)
+- `iMouse`: Pointer interaction data (vec4) (see [iMouse](https://github.com/alnitak/shader_buffers/blob/main/lib/src/imouse.dart))
+and the output variable `fragColor` (vec4).
 
 In the `example/assets/shaders/common` folder you can find the `common_header.frag` file which contains the common code for all the shaders used by the *shader_buffer* package. Include that file in your shader and add your custom code:
 
 ```glsl
-// This will include some common uniforms that you can use in your shader:
-// - [iResolution] the widget width and height
-// - [iTime] the current time in seconds from the start of rendering
-// - [iFrame] the current rendering frame number
-// - [iMouse] for user interaction with the pointer (see https://github.com/alnitak/shader_buffers/blob/main/lib/src/imouse.dart)
-// and the output variable `fragColor`
 #include <common/common_header.frag>
 
-// Mandatory uniform which is sent by audio_flux and it represents the audio data.
+// At least one `sampler2D` is a mandatory uniform you must declare. It is sent
+// by "audio_flux" and it represents the audio data.
 // This texture is a matrix of 256x2 RGBA pixels representing:
 // in the 1st row the frequencies data
 // in the 2nd row the amplitudes data
