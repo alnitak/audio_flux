@@ -6,7 +6,7 @@ description: >-
   shader_buffer to render them to shaders.
 version: 1.0.0
 homepage: https://github.com/alnitak/audio_flux
-publish_to: none
+repository: https://github.com/alnitak/audio_flux
 topics:
   - audio
   - visualizer
