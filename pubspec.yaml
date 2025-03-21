@@ -13,7 +13,7 @@ topics:
   - shader
 
 screenshots:
-  - description: "shader"
+  - description: "shader visualizer"
     path: img/shader.png
 
 environment:
