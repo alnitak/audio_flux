@@ -195,8 +195,9 @@ class _MainAppState extends State<MainApp> {
             .copyWith(textScaler: const TextScaler.linear(0.9)),
         child: SafeArea(
           child: Scaffold(
+            resizeToAvoidBottomInset: true,
             bottomSheet: Padding(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(6),
               child: Controls(model: model),
             ),
             body: Align(
@@ -238,7 +239,7 @@ class _MainAppState extends State<MainApp> {
                     listenable: model,
                     builder: (BuildContext context, Widget? child) {
                       return SizedBox(
-                        width: 500,
+                        width: double.infinity,
                         height: 300,
                         child: AudioFlux(
                           fluxType: model.fluxType,

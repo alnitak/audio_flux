@@ -172,11 +172,12 @@ class _AudioFluxState extends State<AudioFlux> {
 
   @override
   Widget build(BuildContext context) {
-    if (!((widget.dataSource == DataSources.soloud &&
-            soloud.isInitialized &&
-            soloud.getVisualizationEnabled()) ||
-        (widget.dataSource == DataSources.recorder &&
-            recorder.isDeviceInitialized()))) {
+    if (visualizerWidget == null ||
+        !((widget.dataSource == DataSources.soloud &&
+                soloud.isInitialized &&
+                soloud.getVisualizationEnabled()) ||
+            (widget.dataSource == DataSources.recorder &&
+                recorder.isDeviceInitialized()))) {
       return const SizedBox.shrink();
     }
 
