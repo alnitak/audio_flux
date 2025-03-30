@@ -71,12 +71,51 @@ class AudioFlux extends StatefulWidget {
   State<AudioFlux> createState() => _AudioFluxState();
 }
 
-class _AudioFluxState extends State<AudioFlux> {
+class _AudioFluxState extends State<AudioFlux>
+    with SingleTickerProviderStateMixin {
+  late final Ticker ticker;
   final recorder = Recorder.instance;
   final soloud = SoLoud.instance;
   DataCallback? dataCallback;
   AudioData? audioData;
   Widget? visualizerWidget;
+  final srcInput = ValueNotifier((isSoLoud: false, isRecording: false));
+
+  @override
+  void initState() {
+    super.initState();
+    ticker = createTicker((_) {
+      if (!srcInput.value.isSoLoud &&
+          widget.dataSource == DataSources.soloud &&
+          soloud.isInitialized &&
+          soloud.getVisualizationEnabled()) {
+        if (visualizerWidget == null) {
+          setupWidgetAndCallback();
+        }
+        srcInput.value = (isSoLoud: true, isRecording: false);
+      } else if (!srcInput.value.isRecording &&
+          widget.dataSource == DataSources.recorder &&
+          recorder.isDeviceInitialized()) {
+        if (visualizerWidget == null) {
+          setupWidgetAndCallback();
+        }
+        srcInput.value = (isSoLoud: false, isRecording: true);
+      } else if (!srcInput.value.isRecording && !srcInput.value.isSoLoud) {
+        visualizerWidget = null;
+        srcInput.value = (isSoLoud: false, isRecording: false);
+      }
+    });
+    ticker.start();
+  }
+
+  @override
+  void dispose() {
+    ticker.dispose();
+    audioData?.dispose();
+    soloud.deinit();
+    recorder.deinit();
+    super.dispose();
+  }
 
   @override
   void didUpdateWidget(covariant AudioFlux oldWidget) {
@@ -118,14 +157,6 @@ class _AudioFluxState extends State<AudioFlux> {
     }
   }
 
-  @override
-  void dispose() {
-    audioData?.dispose();
-    soloud.deinit();
-    recorder.deinit();
-    super.dispose();
-  }
-
   Future<void> setupWidgetAndCallback() async {
     switch (widget.fluxType) {
       case FluxType.waveform:
@@ -160,6 +191,7 @@ class _AudioFluxState extends State<AudioFlux> {
           params: widget.modelParams,
         );
     }
+    Future.delayed(Duration.zero, () => setState(() {}));
   }
 
   Future<ui.Image?> buildImage(Uint8List bmp) async {
@@ -172,16 +204,16 @@ class _AudioFluxState extends State<AudioFlux> {
 
   @override
   Widget build(BuildContext context) {
-    if (visualizerWidget == null ||
-        !((widget.dataSource == DataSources.soloud &&
-                soloud.isInitialized &&
-                soloud.getVisualizationEnabled()) ||
-            (widget.dataSource == DataSources.recorder &&
-                recorder.isDeviceInitialized()))) {
-      return const SizedBox.shrink();
+    if (visualizerWidget == null) {
+      return const Center(child: CircularProgressIndicator());
     }
 
-    return visualizerWidget!;
+    return ValueListenableBuilder(
+      valueListenable: srcInput,
+      builder: (context, value, child) {
+        return visualizerWidget!;
+      },
+    );
   }
 }
 

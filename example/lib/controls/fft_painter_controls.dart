@@ -33,11 +33,11 @@ class _FftPainterControlsState extends State<FftPainterControls> {
           ),
           SliderParam(
             label: 'shrinkTo',
-            min: -1,
-            max: widget.model.fftParams.maxBinIndex.toDouble(),
-            value: widget.model.fftPainterParams.shrinkTo.toDouble() - 1,
+            min: 2,
+            max: widget.model.fftParams.maxBinIndex.toDouble() + 1,
+            value: widget.model.fftPainterParams.shrinkTo.toDouble(),
             onChanged: (value) {
-              if (value < 0) value = -1;
+              if (value <= 0) value = -1;
               if (value >
                   widget.model.fftParams.maxBinIndex -
                       widget.model.fftParams.minBinIndex) {

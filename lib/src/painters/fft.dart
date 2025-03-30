@@ -38,13 +38,25 @@ class FftPainter extends CustomPainter {
   FftPainter({
     required this.dataCallback,
     required this.params,
-  });
+  }) {
+    // Sanitize the shrinkTo value
+    final min = params.fftParams.minBinIndex;
+    final max = params.fftParams.maxBinIndex;
+    _shrinkTo = params.fftPainterParams.shrinkTo <= (max - min + 1)
+        ? params.fftPainterParams.shrinkTo
+        : max - min + 1;
+  }
 
   /// The callback to get the FFT data.
   final DataCallback dataCallback;
 
   /// The model parameters.
   final ModelParams params;
+
+  /// Sanitized "params.fftPainterParams.shrinkTo" value.
+  /// This is used to calculate the number of bars to draw and must not exceed
+  /// "params.fftParams.maxBinIndex - params.fftParams.minBinIndex + 1".
+  late int _shrinkTo;
 
   /// Process the wave data and store it in the buffer.
   ///
@@ -63,7 +75,7 @@ class FftPainter extends CustomPainter {
   /// ensure that the end index does not exceed the `maxBinIndex`.
   void processWaveData(Float32List currentWaveData) {
     final buffer = params.dataManager.data;
-    final barCount = params.fftPainterParams.shrinkTo;
+    final barCount = _shrinkTo;
     final minBinIndex = params.fftParams.minBinIndex;
     final maxBinIndex = params.fftParams.maxBinIndex;
     final range = maxBinIndex - minBinIndex + 1;
@@ -132,7 +144,7 @@ class FftPainter extends CustomPainter {
     }
 
     // Draw the bars
-    final barCount = params.fftPainterParams.shrinkTo - 1;
+    final barCount = _shrinkTo - 1;
     final barWidth = size.width / barCount;
     for (var i = 0; i < barCount; i++) {
       final value = params.dataManager.data[i];
