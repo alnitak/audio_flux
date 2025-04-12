@@ -3,9 +3,9 @@ import 'package:audio_flux/audio_flux.dart';
 /// A list of available shaders.
 class Shaders {
   // ignore: public_member_api_docs
-  static const List<ShaderParams> shaderParams = [
+  static List<ShaderParams> shaderParams = [
     /// 2D LED Spectrum
-    ShaderParams(
+    const ShaderParams(
       shaderName: '2D LED Spectrum',
       shaderPath: 'assets/shaders/2d_led_spectrum.frag',
       params: [
@@ -23,10 +23,11 @@ class Shaders {
         ),
       ],
       paramsRange: [],
+      textureChannels: [],
     ),
 
     /// Sound Eclipse
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'SoundEclipse rpm',
       shaderPath: 'assets/shaders/sound_eclipse_rpm.frag',
       params: [
@@ -53,7 +54,7 @@ class Shaders {
     ),
 
     /// Frequency Visualization
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'Frequency Visualization',
       shaderPath: 'assets/shaders/frequency_visualization.frag',
       params: [],
@@ -61,7 +62,7 @@ class Shaders {
     ),
 
     /// Audio Wave Form
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'Audio Wave Form',
       shaderPath: 'assets/shaders/audio_wave_form.frag',
       params: [],
@@ -69,7 +70,7 @@ class Shaders {
     ),
 
     /// Sound Sinus Wave
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'Sound Sinus Wave',
       shaderPath: 'assets/shaders/sound_sinus_wave.frag',
       params: [],
@@ -77,7 +78,7 @@ class Shaders {
     ),
 
     /// Audio Visualizer - Raymarching
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'Audio Visualizer - Raymarching',
       shaderPath: 'assets/shaders/audio_visualizer_raymarching.frag',
       params: [],
@@ -85,7 +86,7 @@ class Shaders {
     ),
 
     /// Sound Grid
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'Sound Grid',
       shaderPath: 'assets/shaders/sound_grid.frag',
       params: [],
@@ -93,7 +94,7 @@ class Shaders {
     ),
 
     /// Smoke Rings
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'Smoke Rings',
       shaderPath: 'assets/shaders/smoke_rings.frag',
       params: [],
@@ -101,7 +102,7 @@ class Shaders {
     ),
 
     /// Dancing Flutter
-    ShaderParams(
+    const ShaderParams(
       shaderName: 'Dancing Flutter',
       shaderPath: 'assets/shaders/dancing_flutter.frag',
       params: [],

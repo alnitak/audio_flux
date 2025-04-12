@@ -116,12 +116,14 @@ class AudioVisualizerModel extends ChangeNotifier {
     String? shaderPath,
     List<ShaderParam>? params,
     List<ShaderParamRange>? paramsRange,
+    List<TextureChannel>? textureChannels,
   }) {
     _shaderParams = _shaderParams.copyWith(
       shaderName: shaderName,
       shaderPath: shaderPath,
       params: params,
       paramsRange: paramsRange,
+      textureChannels: textureChannels,
     );
     _modelParams = _modelParams.copyWith(shaderParams: _shaderParams);
     notifyListeners();

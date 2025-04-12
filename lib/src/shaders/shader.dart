@@ -37,7 +37,7 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
   late final Ticker ticker;
   late Bmp32Header linearData;
   LayerBuffer? mainImage;
-  IChannel? iChannel;
+  IChannel? iChannelAudio;
   late ShaderController shaderController;
 
   late int cols;
@@ -136,11 +136,16 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
 
     /// Create the iChannel if not already
     final ret = await completer.future;
-    if (iChannel == null) {
-      iChannel = IChannel(texture: ret);
-      mainImage!.setChannels([iChannel!]);
+    if (iChannelAudio == null) {
+      iChannelAudio = IChannel(texture: ret);
+      mainImage!.setChannels(
+        [
+          iChannelAudio!,
+          ...(widget.params.shaderParams.textureChannels ?? []),
+        ],
+      );
     } else {
-      iChannel!.updateTexture(ret);
+      iChannelAudio!.updateTexture(ret);
     }
 
     /// add the uniforms
@@ -171,7 +176,7 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
     if (currentShaderPath != widget.params.shaderParams.shaderPath) {
       ticker.stop();
       currentShaderPath = widget.params.shaderParams.shaderPath;
-      iChannel = null;
+      iChannelAudio = null;
       mainImage = LayerBuffer(
         shaderAssetsName: widget.params.shaderParams.shaderPath,
       );

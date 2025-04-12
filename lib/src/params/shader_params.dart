@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:shader_buffers/shader_buffers.dart';
+
 /// Definition of shader parameters that can have a value in a range.
 class ShaderParam {
   ///
@@ -84,6 +87,17 @@ class ShaderParamRange {
   }
 }
 
+class TextureChannel extends IChannel {
+  TextureChannel({
+    super.assetsTexturePath,
+    super.texture,
+  }) : assert(
+          /// Only one of [assetsTexturePath] or [texture] must be given
+          assetsTexturePath != null || texture != null,
+          'Only [assetsTexturePath] or [texture] must be given!',
+        );
+}
+
 /// Definition of shader parameters.
 class ShaderParams {
   ///
@@ -92,6 +106,7 @@ class ShaderParams {
     this.shaderPath = '',
     this.params,
     this.paramsRange,
+    this.textureChannels,
   });
 
   /// The shader name
@@ -106,18 +121,23 @@ class ShaderParams {
   /// The shader parameters that have a range
   final List<ShaderParamRange>? paramsRange;
 
+  /// The shader textures
+  final List<TextureChannel>? textureChannels;
+
   ///
   ShaderParams copyWith({
     String? shaderName,
     String? shaderPath,
     List<ShaderParam>? params,
     List<ShaderParamRange>? paramsRange,
+    List<TextureChannel>? textureChannels,
   }) {
     return ShaderParams(
       shaderName: shaderName ?? this.shaderName,
       shaderPath: shaderPath ?? this.shaderPath,
       params: params ?? this.params,
       paramsRange: paramsRange ?? this.paramsRange,
+      textureChannels: textureChannels ?? this.textureChannels,
     );
   }
 }
