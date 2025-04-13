@@ -27,7 +27,7 @@ class _FluxTypeControlsState extends State<FluxTypeControls> {
           spacing: 22,
           children: [
             for (var i = 0; i < FluxType.values.length; i++)
-              if (FluxType.values[i].name != 'shader')
+              if (FluxType.values[i] != FluxType.shader)
                 FluxCheckBox(
                   label: FluxType.values[i].name,
                   value: widget.model.fluxType.index == i,
@@ -55,6 +55,7 @@ class _FluxTypeControlsState extends State<FluxTypeControls> {
                     shaderPath: Shaders.shaderParams[i].shaderPath,
                     params: Shaders.shaderParams[i].params,
                     paramsRange: Shaders.shaderParams[i].paramsRange,
+                    textureChannels: Shaders.shaderParams[i].textureChannels,
                   );
                   widget.onChanged();
                 },

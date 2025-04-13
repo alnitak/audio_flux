@@ -8,7 +8,9 @@
         {
             "name": "audio_flux",
             "request": "launch",
-            "type": "dart"
+            "program": "lib/main_extended.dart",
+            "type": "dart",
+            "cwd": "${workspaceFolder}/example"
         },
         {
             "name": "audio_flux (profile mode)",

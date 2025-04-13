@@ -22,8 +22,6 @@ class Shaders {
           value: 32,
         ),
       ],
-      paramsRange: [],
-      textureChannels: [],
     ),
 
     /// Sound Eclipse
@@ -50,63 +48,57 @@ class Shaders {
           value: 0.5,
         ),
       ],
-      paramsRange: [],
     ),
 
     /// Frequency Visualization
     const ShaderParams(
       shaderName: 'Frequency Visualization',
       shaderPath: 'assets/shaders/frequency_visualization.frag',
-      params: [],
-      paramsRange: [],
     ),
 
     /// Audio Wave Form
     const ShaderParams(
       shaderName: 'Audio Wave Form',
       shaderPath: 'assets/shaders/audio_wave_form.frag',
-      params: [],
-      paramsRange: [],
     ),
 
     /// Sound Sinus Wave
     const ShaderParams(
       shaderName: 'Sound Sinus Wave',
       shaderPath: 'assets/shaders/sound_sinus_wave.frag',
-      params: [],
-      paramsRange: [],
     ),
 
     /// Audio Visualizer - Raymarching
     const ShaderParams(
       shaderName: 'Audio Visualizer - Raymarching',
       shaderPath: 'assets/shaders/audio_visualizer_raymarching.frag',
-      params: [],
-      paramsRange: [],
     ),
 
     /// Sound Grid
     const ShaderParams(
       shaderName: 'Sound Grid',
       shaderPath: 'assets/shaders/sound_grid.frag',
-      params: [],
-      paramsRange: [],
     ),
 
     /// Smoke Rings
     const ShaderParams(
       shaderName: 'Smoke Rings',
       shaderPath: 'assets/shaders/smoke_rings.frag',
-      params: [],
-      paramsRange: [],
     ),
 
     /// Dancing Flutter
     const ShaderParams(
       shaderName: 'Dancing Flutter',
       shaderPath: 'assets/shaders/dancing_flutter.frag',
-      params: [],
-      paramsRange: [],
+    ),
+
+    /// Texture
+    ShaderParams(
+      shaderName: 'Texture',
+      shaderPath: 'assets/shaders/texture.frag',
+      textureChannels: [
+        TextureChannel(assetsTexturePath: 'assets/dash.png'),
+      ],
     ),
   ];
 }

@@ -135,9 +135,9 @@ class ShaderParams {
     return ShaderParams(
       shaderName: shaderName ?? this.shaderName,
       shaderPath: shaderPath ?? this.shaderPath,
-      params: params ?? this.params,
-      paramsRange: paramsRange ?? this.paramsRange,
-      textureChannels: textureChannels ?? this.textureChannels,
+      params: params,
+      paramsRange: paramsRange,
+      textureChannels: textureChannels,
     );
   }
 }

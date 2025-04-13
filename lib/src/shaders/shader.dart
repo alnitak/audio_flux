@@ -141,7 +141,9 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
       mainImage!.setChannels(
         [
           iChannelAudio!,
-          ...(widget.params.shaderParams.textureChannels ?? []),
+          if (widget.params.shaderParams.textureChannels != null &&
+              widget.params.shaderParams.textureChannels!.isNotEmpty)
+            ...widget.params.shaderParams.textureChannels!,
         ],
       );
     } else {

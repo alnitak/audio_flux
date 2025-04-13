@@ -44,3 +44,4 @@ flutter:
     - assets/shaders/sound_grid.frag
     - assets/shaders/smoke_rings.frag
     - assets/shaders/dancing_flutter.frag
+    - assets/shaders/texture.frag
