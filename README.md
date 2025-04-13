@@ -108,6 +108,8 @@ AudioFlux(
     shaderParams: ShaderParams(
       shaderPath: 'assets/shaders/dancing_flutter.frag',
       params: /* eventually add your custom uniform parameters */
+      paramsRange: /* eventually add your custom range parameters */
+      textureChannels: /* eventually add your `ui.Image` or asset texture */
     ),
   ),
 )
@@ -133,11 +135,15 @@ In the `example/assets/shaders/common` folder you can find the `common_header.fr
 // in the 1st row the frequencies data
 // in the 2nd row the amplitudes data
 uniform sampler2D iChannel0;
+// After the first mandatory sampler2D, you can add any number of textures.
 
 // Other uniforms if you want to add custom parameters and control them from Dart
 uniform float customUniform;
 
 // The shader code.
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+    // ...
+}
 
 // If you want to copy/paste ShaderToy shader, you also need to include
 // this at the end of the code:
