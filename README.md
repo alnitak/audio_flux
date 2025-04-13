@@ -136,6 +136,7 @@ In the `example/assets/shaders/common` folder you can find the `common_header.fr
 // in the 2nd row the amplitudes data
 uniform sampler2D iChannel0;
 // After the first mandatory sampler2D, you can add any number of textures.
+uniform sampler2D myOtherTexture;
 
 // Other uniforms if you want to add custom parameters and control them from Dart
 uniform float customUniform;
