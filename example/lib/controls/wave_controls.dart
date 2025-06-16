@@ -43,6 +43,16 @@ class _WaveControlsState extends State<WaveControls> {
             },
           ),
           SliderParam(
+            label: 'barRadius',
+            min: 0,
+            max: 6,
+            value: widget.model.waveformParams.barRadius,
+            onChanged: (value) {
+              widget.model.updateWaveformPainterParams(barRadius: value);
+              setState(() {});
+            },
+          ),
+          SliderParam(
             label: 'chunkSize',
             min: 1,
             max: 256,

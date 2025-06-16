@@ -72,6 +72,7 @@ class AudioVisualizerModel extends ChangeNotifier {
   void updateFftPainterParams({
     int? shrinkTo,
     double? barSpacingScale,
+    double? barRadius,
   }) {
     if (shrinkTo != null) {
       var effectiveShrinkTo = shrinkTo == -1
@@ -91,6 +92,7 @@ class AudioVisualizerModel extends ChangeNotifier {
     _fftPainterParams = _fftPainterParams.copyWith(
       shrinkTo: shrinkTo,
       barSpacingScale: barSpacingScale,
+      barRadius: barRadius,
     );
     _modelParams = _modelParams.copyWith(fftPainterParams: _fftPainterParams);
     notifyListeners();
@@ -99,11 +101,13 @@ class AudioVisualizerModel extends ChangeNotifier {
   void updateWaveformPainterParams({
     int? barsWidth,
     double? barSpacingScale,
+    double? barRadius,
     int? chunkSize,
   }) {
     _waveformPainterParams = _waveformPainterParams.copyWith(
       barsWidth: barsWidth,
       barSpacingScale: barSpacingScale,
+      barRadius: barRadius,
       chunkSize: chunkSize,
     );
     _modelParams =

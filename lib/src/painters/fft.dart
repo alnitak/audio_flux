@@ -151,12 +151,15 @@ class FftPainter extends CustomPainter {
       final barHeight = size.height * value * params.audioScale;
       final barX = i * barWidth;
 
-      canvas.drawRect(
-        Rect.fromLTWH(
-          barX,
-          size.height - barHeight,
-          barWidth * (1.0 - params.fftPainterParams.barSpacingScale),
-          barHeight,
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(
+            barX,
+            size.height - barHeight,
+            barWidth * (1.0 - params.fftPainterParams.barSpacingScale),
+            barHeight,
+          ),
+          Radius.circular(params.fftPainterParams.barRadius),
         ),
         paint,
       );

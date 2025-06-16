@@ -32,6 +32,16 @@ class _FftPainterControlsState extends State<FftPainterControls> {
             },
           ),
           SliderParam(
+            label: 'barRadius',
+            min: 0,
+            max: 6,
+            value: widget.model.fftPainterParams.barRadius,
+            onChanged: (value) {
+              widget.model.updateFftPainterParams(barRadius: value);
+              setState(() {});
+            },
+          ),
+          SliderParam(
             label: 'shrinkTo',
             min: 2,
             max: widget.model.fftParams.maxBinIndex.toDouble() + 1,

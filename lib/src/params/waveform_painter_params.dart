@@ -4,10 +4,15 @@ class WaveformPainterParams {
   const WaveformPainterParams({
     this.barsWidth = 1,
     this.barSpacingScale = 0,
+    this.barRadius = 0,
     this.chunkSize = 256,
-  }) : assert(
+  })  : assert(
           chunkSize > 0 && chunkSize <= 256,
           'chunkSize must be between 1 and 256',
+        ),
+        assert(
+          barRadius >= 0,
+          'barRadius must be non-negative',
         );
 
   /// The size of a bar in pixels.
@@ -15,6 +20,9 @@ class WaveformPainterParams {
 
   /// The size of spacing between bars in pixels.
   final double barSpacingScale;
+
+  /// The radius of the bars in pixels.
+  final double barRadius;
 
   /// The number of new data to average and add to the waveform.
   /// The higher the number, the slower the waveform is moving.
@@ -25,11 +33,13 @@ class WaveformPainterParams {
   WaveformPainterParams copyWith({
     int? barsWidth,
     double? barSpacingScale,
+    double? barRadius,
     int? chunkSize,
   }) {
     return WaveformPainterParams(
       barsWidth: barsWidth ?? this.barsWidth,
       barSpacingScale: barSpacingScale ?? this.barSpacingScale,
+      barRadius: barRadius ?? this.barRadius,
       chunkSize: chunkSize ?? this.chunkSize,
     );
   }

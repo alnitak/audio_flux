@@ -1,3 +1,6 @@
+## 1.2.1
+- added radius parameter for FFT and wave bars
+
 ## 1.2.0
 - now assets images or `ui.Image`s are supported as `uniform sampler2D`s. See the new `main.dart` and `texture.frag` example.
 

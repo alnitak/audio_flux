@@ -143,12 +143,15 @@ class WavePainter extends CustomPainter {
       final barHeight = size.height * value * 2 * params.audioScale;
       final barX = i * barWidth;
 
-      canvas.drawRect(
-        Rect.fromLTWH(
-          barX,
-          (size.height - barHeight) * 0.5,
-          barWidth * (1.0 - params.waveformParams.barSpacingScale),
-          barHeight,
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(
+            barX,
+            (size.height - barHeight) * 0.5,
+            barWidth * (1.0 - params.waveformParams.barSpacingScale),
+            barHeight,
+          ),
+          Radius.circular(params.waveformParams.barRadius),
         ),
         paint,
       );
