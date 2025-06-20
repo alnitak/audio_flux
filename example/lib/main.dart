@@ -68,18 +68,22 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: true,
-        body: AudioFlux(
-          fluxType: FluxType.shader,
-          dataSource: DataSources.soloud,
-          modelParams: ModelParams(
-            shaderParams: ShaderParams(
-              shaderPath: 'assets/shaders/texture.frag',
-              textureChannels: [
-                TextureChannel(assetsTexturePath: 'assets/dash.png'),
-              ],
+        body: SizedBox(
+          width: 350,
+          height: 200,
+          child: AudioFlux(
+            fluxType: FluxType.waveform,
+            dataSource: DataSources.soloud,
+            modelParams: ModelParams(
+              waveformParams: WaveformPainterParams(
+                barsWidth: 2,
+                barSpacingScale: 0.5,
+                barRadius: 1,
+                chunkSize: 128,
+              ),
             ),
           ),
         ),

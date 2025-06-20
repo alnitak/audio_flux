@@ -14,7 +14,6 @@ class ModelParams {
     this.fftParams = const FftParams(),
     this.fftPainterParams = const FftPainterParams(),
     this.waveformParams = const WaveformPainterParams(),
-    this.shaderParams = const ShaderParams(),
   });
 
   /// The data manager used to store the waveform data displayed
@@ -53,9 +52,6 @@ class ModelParams {
   /// The parameters for the waveform.
   final WaveformPainterParams waveformParams;
 
-  /// The parameters for the shader.
-  final ShaderParams shaderParams;
-
   ///
   ModelParams copyWith({
     Color? backgroundColor,
@@ -66,7 +62,6 @@ class ModelParams {
     FftParams? fftParams,
     FftPainterParams? fftPainterParams,
     WaveformPainterParams? waveformParams,
-    ShaderParams? shaderParams,
   }) {
     return ModelParams(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -77,7 +72,6 @@ class ModelParams {
       fftParams: fftParams ?? this.fftParams,
       fftPainterParams: fftPainterParams ?? this.fftPainterParams,
       waveformParams: waveformParams ?? this.waveformParams,
-      shaderParams: shaderParams ?? this.shaderParams,
     );
   }
 }

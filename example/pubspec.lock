@@ -15,7 +15,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.2.0"
+    version: "1.2.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -303,14 +303,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  shader_buffers:
-    dependency: transitive
-    description:
-      name: shader_buffers
-      sha256: "3a9cea23dcf8da9e618fdbaa046deaffd22de73ae990159b63da48e0f67521d9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   sky_engine:
     dependency: transitive
     description: flutter

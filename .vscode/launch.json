@@ -8,7 +8,7 @@
         {
             "name": "audio_flux",
             "request": "launch",
-            "program": "lib/main_extended.dart",
+            "program": "lib/main.dart",
             "type": "dart",
             "cwd": "${workspaceFolder}/example"
         },

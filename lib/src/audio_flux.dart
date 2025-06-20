@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:audio_flux/src/painters/fft.dart';
 import 'package:audio_flux/src/painters/waveform.dart';
 import 'package:audio_flux/src/params/model_params.dart';
-import 'package:audio_flux/src/shaders/shader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_recorder/flutter_recorder.dart';
@@ -28,9 +27,6 @@ enum FluxType {
 
   /// Use the FFT CustomPainter to draw the FFT.
   fft,
-
-  /// Use a shader and draw it.
-  shader,
 }
 
 /// Definition for the callback that returns the audio data.
@@ -183,13 +179,6 @@ class _AudioFluxState extends State<AudioFlux>
           ),
         );
 
-      case FluxType.shader:
-        _setDataAsLinear();
-        visualizerWidget = Shader(
-          dataCallback: dataCallback!,
-          audioData: audioData,
-          params: widget.modelParams,
-        );
     }
     Future.delayed(Duration.zero, () => setState(() {}));
   }
