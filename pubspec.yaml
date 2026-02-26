@@ -26,7 +26,7 @@ dependencies:
 
   flutter_recorder: ^1.1.2
     # path: ../flutter_recorder
-  flutter_soloud: 3.4.10
+  flutter_soloud: ^3.4.10
     # path: ../flutter_soloud
   shader_buffers: ^1.1.4
     # path: ../shader_buffers
