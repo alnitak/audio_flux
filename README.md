@@ -58,7 +58,7 @@ where:
 ```dart
 AudioFlux(
   fluxType: FluxType.waveform,
-  dataSource: DataSource.soloud,
+  dataSource: DataSources.soloud,
   modelParams: ModelParams(
     waveformParams: WaveformPainterParams(
       barsWidth: 2,
@@ -74,7 +74,7 @@ AudioFlux(
 ```dart
 AudioFlux(
   fluxType: FluxType.fft,
-  dataSource: DataSource.soloud,
+  dataSource: DataSources.soloud,
   modelParams: ModelParams(
     fftParams: FftParams(
       minBinIndex: 5,
@@ -103,7 +103,7 @@ flutter:
 ```dart
 AudioFlux(
   fluxType: FluxType.shader,
-  dataSource: DataSource.soloud,
+  dataSource: DataSources.soloud,
   modelParams: ModelParams(
     shaderParams: ShaderParams(
       shaderPath: 'shaders/dancing_flutter.frag',
