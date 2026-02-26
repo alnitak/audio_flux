@@ -157,6 +157,8 @@ class _AudioFluxState extends State<AudioFlux>
     }
   }
 
+  /// Setup the painter and the callback needed by [FluxType.waveform],
+  /// [FluxType.fft], and [FluxType.shader].
   Future<void> setupWidgetAndCallback() async {
     switch (widget.fluxType) {
       case FluxType.waveform:
@@ -194,6 +196,7 @@ class _AudioFluxState extends State<AudioFlux>
     Future.delayed(Duration.zero, () => setState(() {}));
   }
 
+  /// Build an image to be passed to the shader.
   Future<ui.Image?> buildImage(Uint8List bmp) async {
     final completer = Completer<ui.Image>();
 
