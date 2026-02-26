@@ -22,7 +22,7 @@ dependencies:
 ```
 These dependencies provide comprehensive audio functionality, enabling playback control, recording, and real-time audio visualization.
 
-Before using the package, ensure you've configured the necessary platform-specific settings and permissions as described in the documentation of each dependency.
+Before using the package, ensure you've configured the necessary platform-specific settings and permissions as described in the documentation of each packages.
 
 ## Usage
 
@@ -97,7 +97,7 @@ flutter:
   uses-material-design: true
 
   shaders:
-    - assets/shaders/dancing_flutter.frag
+    - shaders/dancing_flutter.frag
 ```
 
 ```dart
@@ -106,7 +106,7 @@ AudioFlux(
   dataSource: DataSource.soloud,
   modelParams: ModelParams(
     shaderParams: ShaderParams(
-      shaderPath: 'assets/shaders/dancing_flutter.frag',
+      shaderPath: 'shaders/dancing_flutter.frag',
       params: /* eventually add your custom uniform parameters */
       paramsRange: /* eventually add your custom range parameters */
       textureChannels: /* eventually add your `ui.Image` or asset texture */
@@ -124,7 +124,7 @@ The `common_header.frag` file provides essential uniforms for shader development
 - `iMouse`: Pointer interaction data (vec4) (see [iMouse](https://github.com/alnitak/shader_buffers/blob/main/lib/src/imouse.dart))
 and the output variable `fragColor` (vec4).
 
-In the `example/assets/shaders/common` folder you can find the `common_header.frag` file which contains the common code for all the shaders used by the *shader_buffer* package. Include that file in your shader and add your custom code:
+In the `example/shaders/common` folder you can find the `common_header.frag` file which contains the common code for all the shaders used by the *shader_buffer* package. Include that file in your shader and add your custom code:
 
 ```glsl
 #include <common/common_header.frag>

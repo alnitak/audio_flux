@@ -47,15 +47,16 @@ class _FftPainterControlsState extends State<FftPainterControls> {
             max: widget.model.fftParams.maxBinIndex.toDouble() + 1,
             value: widget.model.fftPainterParams.shrinkTo.toDouble(),
             onChanged: (value) {
-              if (value <= 0) value = -1;
-              if (value >
+              var newValue = value;
+              if (newValue <= 0) newValue = -1;
+              if (newValue >
                   widget.model.fftParams.maxBinIndex -
                       widget.model.fftParams.minBinIndex) {
-                value = widget.model.fftParams.maxBinIndex -
+                newValue = widget.model.fftParams.maxBinIndex -
                     widget.model.fftParams.minBinIndex +
                     1;
               }
-              widget.model.updateFftPainterParams(shrinkTo: value.toInt());
+              widget.model.updateFftPainterParams(shrinkTo: newValue.toInt());
               setState(() {});
             },
           ),

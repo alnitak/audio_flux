@@ -143,8 +143,12 @@ class _MainAppState extends State<MainApp> {
   Future<void> initSoLoud(String audioAsset) async {
     try {
       recorder.deinit();
-      await soloud.init(bufferSize: 1024, channels: Channels.mono);
-      soloud.setVisualizationEnabled(true);
+      if (!soloud.isInitialized) {
+        await soloud.init(bufferSize: 1024, channels: Channels.mono);
+        soloud.setVisualizationEnabled(true);
+      } else {
+        await soloud.disposeAllSources();
+      }
 
       await soloud.play(
         await soloud.loadAsset(
@@ -197,10 +201,6 @@ class _MainAppState extends State<MainApp> {
         child: SafeArea(
           child: Scaffold(
             resizeToAvoidBottomInset: true,
-            bottomSheet: Padding(
-              padding: const EdgeInsets.all(6),
-              child: Controls(model: model),
-            ),
             body: Align(
               alignment: Alignment.topCenter,
               child: Column(
@@ -239,9 +239,7 @@ class _MainAppState extends State<MainApp> {
                   ListenableBuilder(
                     listenable: model,
                     builder: (BuildContext context, Widget? child) {
-                      return SizedBox(
-                        width: double.infinity,
-                        height: 300,
+                      return Expanded(
                         child: AudioFlux(
                           fluxType: model.fluxType,
                           dataSource: model.dataSource,
@@ -250,6 +248,7 @@ class _MainAppState extends State<MainApp> {
                       );
                     },
                   ),
+                  Controls(model: model),
                 ],
               ),
             ),

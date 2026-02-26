@@ -7,7 +7,7 @@ class Shaders {
     /// 2D LED Spectrum
     const ShaderParams(
       shaderName: '2D LED Spectrum',
-      shaderPath: 'assets/shaders/2d_led_spectrum.frag',
+      shaderPath: 'shaders/2d_led_spectrum.frag',
       params: [
         ShaderParam(
           label: 'bands',
@@ -27,7 +27,7 @@ class Shaders {
     /// Sound Eclipse
     const ShaderParams(
       shaderName: 'SoundEclipse rpm',
-      shaderPath: 'assets/shaders/sound_eclipse_rpm.frag',
+      shaderPath: 'shaders/sound_eclipse_rpm.frag',
       params: [
         ShaderParam(
           label: 'RADIUS',
@@ -53,49 +53,49 @@ class Shaders {
     /// Frequency Visualization
     const ShaderParams(
       shaderName: 'Frequency Visualization',
-      shaderPath: 'assets/shaders/frequency_visualization.frag',
+      shaderPath: 'shaders/frequency_visualization.frag',
     ),
 
     /// Audio Wave Form
     const ShaderParams(
       shaderName: 'Audio Wave Form',
-      shaderPath: 'assets/shaders/audio_wave_form.frag',
+      shaderPath: 'shaders/audio_wave_form.frag',
     ),
 
     /// Sound Sinus Wave
     const ShaderParams(
       shaderName: 'Sound Sinus Wave',
-      shaderPath: 'assets/shaders/sound_sinus_wave.frag',
+      shaderPath: 'shaders/sound_sinus_wave.frag',
     ),
 
     /// Audio Visualizer - Raymarching
     const ShaderParams(
       shaderName: 'Audio Visualizer - Raymarching',
-      shaderPath: 'assets/shaders/audio_visualizer_raymarching.frag',
+      shaderPath: 'shaders/audio_visualizer_raymarching.frag',
     ),
 
     /// Sound Grid
     const ShaderParams(
       shaderName: 'Sound Grid',
-      shaderPath: 'assets/shaders/sound_grid.frag',
+      shaderPath: 'shaders/sound_grid.frag',
     ),
 
     /// Smoke Rings
     const ShaderParams(
       shaderName: 'Smoke Rings',
-      shaderPath: 'assets/shaders/smoke_rings.frag',
+      shaderPath: 'shaders/smoke_rings.frag',
     ),
 
     /// Dancing Flutter
     const ShaderParams(
       shaderName: 'Dancing Flutter',
-      shaderPath: 'assets/shaders/dancing_flutter.frag',
+      shaderPath: 'shaders/dancing_flutter.frag',
     ),
 
     /// Texture
     ShaderParams(
       shaderName: 'Texture',
-      shaderPath: 'assets/shaders/texture.frag',
+      shaderPath: 'shaders/texture.frag',
       textureChannels: [
         TextureChannel(assetsTexturePath: 'assets/dash.png'),
       ],

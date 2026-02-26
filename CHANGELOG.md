@@ -1,3 +1,7 @@
+## 1.2.2
+- update dependencies
+- fixed example
+
 ## 1.2.1
 - added radius parameter for FFT and wave bars
 

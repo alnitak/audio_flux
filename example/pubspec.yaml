@@ -10,9 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_recorder: ^1.1.0
+  flutter_recorder: ^1.1.2
     # path: ../flutter_recorder
-  flutter_soloud: ^3.1.2
+  flutter_soloud: 3.4.10
     # path: ../flutter_soloud
   audio_flux:
     path: ../
@@ -35,13 +35,13 @@ flutter:
     - assets/audio/
 
   shaders:
-    - assets/shaders/2d_led_spectrum.frag
-    - assets/shaders/frequency_visualization.frag
-    - assets/shaders/sound_eclipse_rpm.frag
-    - assets/shaders/audio_wave_form.frag
-    - assets/shaders/sound_sinus_wave.frag
-    - assets/shaders/audio_visualizer_raymarching.frag
-    - assets/shaders/sound_grid.frag
-    - assets/shaders/smoke_rings.frag
-    - assets/shaders/dancing_flutter.frag
-    - assets/shaders/texture.frag
+    - shaders/2d_led_spectrum.frag
+    - shaders/frequency_visualization.frag
+    - shaders/sound_eclipse_rpm.frag
+    - shaders/audio_wave_form.frag
+    - shaders/sound_sinus_wave.frag
+    - shaders/audio_visualizer_raymarching.frag
+    - shaders/sound_grid.frag
+    - shaders/smoke_rings.frag
+    - shaders/dancing_flutter.frag
+    - shaders/texture.frag
