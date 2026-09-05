@@ -6,7 +6,6 @@ import 'package:audio_flux/audio_flux.dart';
 import 'package:audio_flux/src/utils/bmp_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_soloud/flutter_soloud.dart' show AudioData;
 import 'package:shader_buffers/shader_buffers.dart';
 
 /// The shader widget which paints a given custom shader.
@@ -15,16 +14,12 @@ class Shader extends StatefulWidget {
   ///
   const Shader({
     required this.dataCallback,
-    required this.audioData,
     required this.params,
     super.key,
   });
 
   /// The callback to get the wave and FFT data.
   final DataCallback dataCallback;
-
-  /// The audio data.
-  final AudioData? audioData;
 
   /// The model parameters.
   final ModelParams params;
@@ -85,7 +80,6 @@ class _ShaderState extends State<Shader> with SingleTickerProviderStateMixin {
   /// in the 1st row the frequencies data
   /// in the 2nd row the wave data
   Uint8List createBmpFromAudioData() {
-    widget.audioData?.updateSamples();
     final data = widget.dataCallback();
     if (data.length < 512) return Uint8List(0);
 

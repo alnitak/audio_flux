@@ -4,7 +4,7 @@ description: >-
   flutter_recorder to acquire the audio data and
   display them using a CustomPainter or
   shader_buffer to render them to shaders.
-version: 1.2.2
+version: 2.0.0
 homepage: https://github.com/alnitak/audio_flux
 repository: https://github.com/alnitak/audio_flux
 topics:
@@ -24,9 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_recorder: ^1.1.2
+  flutter_recorder: ^2.0.3
     # path: ../flutter_recorder
-  flutter_soloud: ^3.4.10
+  flutter_soloud: ^5.0.2
     # path: ../flutter_soloud
   shader_buffers: ^1.1.4
     # path: ../shader_buffers

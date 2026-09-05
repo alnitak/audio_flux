@@ -23,6 +23,7 @@ class Waveform extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRect(
       child: CustomPaint(
+        size: Size.infinite,
         painter: WavePainter(
           dataCallback: dataCallback,
           params: params,
@@ -64,31 +65,40 @@ class WavePainter extends CustomPainter {
   /// [currentWaveData] is the wave data to be processed.
   void processWaveData(Float32List currentWaveData) {
     final buffer = params.dataManager.data;
+    if (buffer.isEmpty || currentWaveData.isEmpty) return;
 
     final chunkSize = params.waveformParams.chunkSize;
-    final processedLength = currentWaveData.length ~/ chunkSize;
+    if (chunkSize <= 0) return;
+    final effectiveChunkSize =
+        chunkSize > currentWaveData.length ? currentWaveData.length : chunkSize;
+    if (effectiveChunkSize <= 0) return;
+    final processedLength =
+        (currentWaveData.length ~/ effectiveChunkSize).clamp(1, buffer.length);
 
     // Shift existing data to the left
-    for (var i = 0; i < buffer.length - processedLength; i++) {
+    final shiftLimit = buffer.length - processedLength;
+    for (var i = 0;
+        i < shiftLimit && (i + processedLength) < buffer.length;
+        i++) {
       buffer[i] = buffer[i + processedLength];
     }
 
     // Process data in chunks and store at the end
     for (var i = 0; i < processedLength; i++) {
       var sum = 0.0;
-      final startIdx = i * chunkSize;
+      final startIdx = i * effectiveChunkSize;
 
-      // Calculate average for this chunk
+      // Calculate average amplitude for this chunk
       var j = 0;
       for (j = 0;
-          j < chunkSize && (startIdx + j) < currentWaveData.length;
+          j < effectiveChunkSize && (startIdx + j) < currentWaveData.length;
           j++) {
-        sum += currentWaveData[startIdx + j];
+        sum += currentWaveData[startIdx + j].abs();
       }
 
       // Store at the end of the array
       final id = buffer.length - processedLength + i;
-      if (id >= 0 && id < buffer.length) {
+      if (id >= 0 && id < buffer.length && j > 0) {
         buffer[id] = sum / j;
       }
     }
@@ -97,11 +107,14 @@ class WavePainter extends CustomPainter {
   /// Calculates the effective number of bars that can be drawn
   /// given the current canvas width and the bar width.
   int _calculateEffectiveBarCount(double width) {
+    if (params.waveformParams.barsWidth <= 0) return 0;
     return (width / params.waveformParams.barsWidth).floor();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (size.isEmpty) return;
+
     final effectiveBarCount = _calculateEffectiveBarCount(size.width);
 
     params.dataManager.ensureCapacity(effectiveBarCount);

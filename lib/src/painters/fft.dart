@@ -23,6 +23,7 @@ class Fft extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRect(
       child: CustomPaint(
+        size: Size.infinite,
         painter: FftPainter(
           dataCallback: dataCallback,
           params: params,
@@ -42,9 +43,10 @@ class FftPainter extends CustomPainter {
     // Sanitize the shrinkTo value
     final min = params.fftParams.minBinIndex;
     final max = params.fftParams.maxBinIndex;
-    _shrinkTo = params.fftPainterParams.shrinkTo <= (max - min + 1)
-        ? params.fftPainterParams.shrinkTo
-        : max - min + 1;
+    final maxBars = (max - min + 1).clamp(1, 256);
+    final requestedShrinkTo = params.fftPainterParams.shrinkTo;
+    _shrinkTo = (requestedShrinkTo <= maxBars ? requestedShrinkTo : maxBars)
+        .clamp(1, 256);
   }
 
   /// The callback to get the FFT data.
@@ -78,10 +80,12 @@ class FftPainter extends CustomPainter {
     final barCount = _shrinkTo;
     final minBinIndex = params.fftParams.minBinIndex;
     final maxBinIndex = params.fftParams.maxBinIndex;
-    final range = maxBinIndex - minBinIndex + 1;
+    final range = (maxBinIndex - minBinIndex + 1).clamp(1, 256);
     final chunkSize = range / barCount;
+    final dataLimit = currentWaveData.length;
 
     for (var i = 0; i < barCount; i++) {
+      if (i >= buffer.length) break;
       var sum = 0.0;
       var count = 0;
 
@@ -89,10 +93,12 @@ class FftPainter extends CustomPainter {
       final startIdx = (i * chunkSize + minBinIndex).floor();
       final endIdx = ((i + 1) * chunkSize + minBinIndex).ceil();
 
-      // Ensure we don't exceed maxIndex
-      final effectiveEndIdx = endIdx.clamp(0, maxBinIndex + 1);
+      // Ensure we don't exceed maxIndex or the available data length
+      final safeStartIdx = startIdx.clamp(0, dataLimit);
+      final effectiveEndIdx =
+          endIdx.clamp(0, maxBinIndex + 1).clamp(0, dataLimit);
 
-      for (var j = startIdx; j < effectiveEndIdx; j++) {
+      for (var j = safeStartIdx; j < effectiveEndIdx; j++) {
         sum += currentWaveData[j];
         count++;
       }
@@ -104,11 +110,15 @@ class FftPainter extends CustomPainter {
 
   /// Calculates the number of bars to draw in the FFT visualizer.
   int _calculateEffectiveBarCount() {
-    return params.fftParams.maxBinIndex - params.fftParams.minBinIndex + 1;
+    final binCount =
+        params.fftParams.maxBinIndex - params.fftParams.minBinIndex + 1;
+    return _shrinkTo > binCount ? _shrinkTo : binCount;
   }
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (size.isEmpty) return;
+
     final effectiveBarCount = _calculateEffectiveBarCount();
 
     params.dataManager.ensureCapacity(effectiveBarCount);
@@ -144,10 +154,11 @@ class FftPainter extends CustomPainter {
     }
 
     // Draw the bars
-    final barCount = _shrinkTo - 1;
+    final barCount = _shrinkTo;
     final barWidth = size.width / barCount;
-    for (var i = 0; i < barCount; i++) {
-      final value = params.dataManager.data[i];
+    final buffer = params.dataManager.data;
+    for (var i = 0; i < barCount && i < buffer.length; i++) {
+      final value = buffer[i];
       final barHeight = size.height * value * params.audioScale;
       final barX = i * barWidth;
 

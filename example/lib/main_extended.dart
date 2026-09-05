@@ -150,7 +150,7 @@ class _MainAppState extends State<MainApp> {
         await soloud.disposeAllSources();
       }
 
-      await soloud.play(
+      soloud.play(
         await soloud.loadAsset(
           audioAsset,
           mode: LoadMode.disk,

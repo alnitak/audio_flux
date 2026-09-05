@@ -30,4 +30,5 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 build/
 
+/.agents
 **/.cxx/

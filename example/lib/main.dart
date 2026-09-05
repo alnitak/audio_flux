@@ -54,7 +54,7 @@ class _MainAppState extends State<MainApp> {
       await soloud.init(bufferSize: 1024, channels: Channels.mono);
       soloud.setVisualizationEnabled(true);
 
-      await soloud.play(
+      soloud.play(
         await soloud.loadAsset(
           audioAsset,
           mode: LoadMode.disk,

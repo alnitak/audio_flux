@@ -3,3 +3,11 @@ analyzer:
   errors:
     public_member_api_docs: ignore
     sort_pub_dependencies: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
