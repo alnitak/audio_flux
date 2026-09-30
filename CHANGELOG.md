@@ -1,3 +1,6 @@
+## 2.0.1
+- update dependencies of flutter_soloud and flutter_recorder
+
 ## 2.0.0
 - updated flutter_soloud to version 5.0.2 and flutter_recorder to version 2.0.3 which use a more performant and different approach for audio capture. Please read their docs to see the breaking changes.
  

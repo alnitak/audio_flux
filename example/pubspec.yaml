@@ -10,9 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_recorder: ^2.0.3
-    # path: ../flutter_recorder
-  flutter_soloud: ^5.0.2
+  flutter_recorder: ^2.0.6
+    # path: ../../flutter_recorder
+  flutter_soloud: ^5.1.5
     # path: ../flutter_soloud
   audio_flux:
     path: ../
@@ -26,6 +26,10 @@ dev_dependencies:
     sdk: flutter
 
   very_good_analysis: ^6.0.0
+
+dependency_overrides:
+  flutter_recorder:
+    path: ../../flutter_recorder
 
 flutter:
   uses-material-design: true
